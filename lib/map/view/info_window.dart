@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_counter/map/module/CenterInfo.dart';
@@ -5,12 +7,26 @@ import 'package:flutter_counter/map/module/ReserveStatus.dart';
 
 class MyInfoWindow extends StatelessWidget {
   CenterInfo center;
+  bool shouldShowRefreshButton = false;
 
   // ignore: public_member_api_docs
-  MyInfoWindow({required this.center});
+  MyInfoWindow({required this.center, required this.shouldShowRefreshButton});
 
   @override
   Widget build(BuildContext context) {
+    final Widget reserveButton = shouldShowRefreshButton
+        ? new OutlineButton(
+            child: new Text(
+              "立即預約",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              print("go to web");
+            },
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)))
+        : Container();
+
     return Container(
       margin: const EdgeInsets.only(top: 100),
       width: 300,
@@ -26,26 +42,20 @@ class MyInfoWindow extends StatelessWidget {
                 center.name,
                 style: new TextStyle(
                     fontSize: 12.0,
-                    color: const Color(0xFF000000),
-                    fontWeight: FontWeight.w200,
-                    fontFamily: "Roboto"),
+                    color: Colors.black),
               ),
               Text(
                 center.address,
                 style: new TextStyle(
                     fontSize: 12.0,
-                    color: const Color(0xFF000000),
-                    fontWeight: FontWeight.w200,
-                    fontFamily: "Roboto"),
+                    color: Colors.black),
               ),
               Text(
-                "current status: ${center.address}",
+                center.status.toReserveAdvise(),
                 style: new TextStyle(
-                    fontSize: 12.0,
-                    color: const Color(0xFF000000),
-                    fontWeight: FontWeight.w200,
-                    fontFamily: "Roboto"),
-              )
+                    color: Colors.black),
+              ),
+              reserveButton
             ]),
         padding: const EdgeInsets.all(0.0),
         alignment: Alignment.center,
