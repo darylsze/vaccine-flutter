@@ -6,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_counter/map/cubit/app_cubit.dart';
 import 'package:flutter_counter/map/module/CenterInfo.dart';
 import 'package:flutter_counter/map/module/ReserveStatus.dart';
-import 'package:flutter_counter/map/repo/repo.dart';
 import 'package:flutter_counter/map/state/app_state.dart';
 import 'package:flutter_counter/map/view/info_window.dart';
+import 'package:flutter_counter/repo/repo.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatelessWidget {
