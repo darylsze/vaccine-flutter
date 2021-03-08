@@ -8,9 +8,21 @@ class HomeState {
   Set<DateTime> allVaccineDates = {};
   DatePageModel? datePageForSelectedVaccine;
 
-  HomeState(this.shouldShowAvailableCenterOnly, this.selectedDateTime, this.selectedVaccine);
+  HomeState(
+      this.shouldShowAvailableCenterOnly,
+      this.selectedDateTime,
+      this.selectedVaccine,
+      this.allVaccineDates
+  );
 
-  HomeState copyWith({required VaccineModel currentVaccine}) {
-      return HomeState(shouldShowAvailableCenterOnly, selectedDateTime, currentVaccine);
+  HomeState copyWith({
+    required VaccineModel currentVaccine
+  }) {
+      return HomeState(
+          shouldShowAvailableCenterOnly,
+          selectedDateTime,
+          currentVaccine,
+          currentVaccine.datePage.map((e) => e.date).toSet()
+      );
   }
 }

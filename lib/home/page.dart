@@ -13,17 +13,21 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
         create: (_) => HomeCubit(),
         child: MaterialApp(
-          title: "_title",
-          home: FutureBuilder(
-              future: context.read<HomeCubit>().getDatePages(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return HomeView(snapshot.data as Set<VaccineModel>);
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("${snapshot.error}"));
-                }
-                return Center(child: CircularProgressIndicator());
-              }),
-        ));
+        title: "_title",
+        home: FutureBuilder(
+          future: HomeCubit().getVaccines(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              // print(snapshot.data)
+              context.read<HomeCubit>().selectVaccine((snapshot.data as Set<VaccineModel>).first);
+              return HomeView();
+            } else if (snapshot.hasError) {
+              return Center(child: Text("${snapshot.error}"));
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
   }
 }

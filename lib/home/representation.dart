@@ -46,7 +46,7 @@ class HomeViewModel {
     this.centers = centers;
   }
 
-  Set<VaccineModel> getVaccineModel() {
+  Set<VaccineModel> getVaccineModels() {
     Set<VaccineModel> vaccines = {};
     centers.groupSetsBy((element) => element.vaccine).forEach(
       (vaccine, centersByVaccine) {

@@ -3,7 +3,7 @@ import 'package:flutter_counter/repo/repo.dart';
 class Remote {
   Future<RemoteVaccines> getVaccines() {
     return Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 0),
             () => RemoteVaccines("06/03/2021 10:55 PM", {
           RemoteVaccine("BioNTech/Fosun", {
             RemoteRegion("HKI", {

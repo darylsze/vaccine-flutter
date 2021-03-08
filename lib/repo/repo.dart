@@ -69,10 +69,10 @@ class MyCenter {
 class Repo {
   Future<Set<CenterInfo>> getAllCenterInfos() {
     return Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 0),
         () => {
-              CenterInfo("a", "a", 22.2900426, 114.1435092, ReserveStatus.FULL),
-              CenterInfo("b", "b", 22.3173771, 114.259532, ReserveStatus.AVAILABLE),
+              CenterInfo("Community Vaccination Centre, Sun Yat Sen Memorial Park Sports Centre", "香港西營盤東邊街北18號", 22.2900426, 114.1435092, ReserveStatus.FULL),
+              CenterInfo("Sai Ying Pun Jockey Club General Out-patient Clinic", "香港西營盤皇后大道西134號", 22.3173771, 114.259532, ReserveStatus.AVAILABLE),
               CenterInfo("c", "c", 22.2848009, 114.2236058, ReserveStatus.URGENT),
               CenterInfo("d", "d", 22.3608107, 114.1253342, ReserveStatus.FULL),
             });
@@ -80,7 +80,9 @@ class Repo {
 
   Future<Set<MyCenter>> getAllVaccineInfos() async {
     var data = await Remote().getVaccines();
+    // print("data: $data");
     var centerLocationInfos = await getAllCenterInfos();
+    // print("centerLocationInfos: $centerLocationInfos");
     Set<MyCenter> centers = {};
 
     data.vaccines.forEach((vaccine) {
@@ -89,7 +91,9 @@ class Repo {
           district.centers.forEach((center) {
             center.quotas.forEach((quota) {
               var reserveDate = quota.date.parseLiteral();
+              // print("reserveDate: $reserveDate");
               var lastUpdateAt = data.lastUpdateDate.parseLiteral();
+              // print("lastUpdateAt: $lastUpdateAt");
               // not available
               var status = ReserveStatus.AVAILABLE;
               if (quota.status == "0") {
@@ -105,17 +109,35 @@ class Repo {
               } else if (center.type == "HA") {
                 clinicType = ClinicType.HA;
               }
-              var info = centerLocationInfos.firstWhere((centerInfo) => centerInfo.address == center.cname);
-              if (info != null) {
-                var tmp = MyCenter(reserveDate, region.name, district.name, {clinicType}, status, center.cname,
-                    info.lat, info.lng, lastUpdateAt, center.name, vaccine.name);
-                centers.add(tmp);
+              // print("centerLocationInfos: $centerLocationInfos");
+              try {
+                var info = centerLocationInfos.firstWhere((centerInfo) =>
+                centerInfo.name == center.name);
+                print("info: $info");
+                if (info != null) {
+                  var tmp = MyCenter(
+                      reserveDate,
+                      region.name,
+                      district.name,
+                      {clinicType},
+                      status,
+                      center.cname,
+                      info.lat,
+                      info.lng,
+                      lastUpdateAt,
+                      center.name,
+                      vaccine.name);
+                  centers.add(tmp);
+                }
+              } catch (e) {
+
               }
             });
           });
         });
       });
     });
+    print("centers: $centers");
     return centers;
   }
 
