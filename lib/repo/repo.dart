@@ -1,49 +1,69 @@
-import 'package:flutter_counter/map/module/CenterInfo.dart';
-import 'package:flutter_counter/map/module/ReserveStatus.dart';
+import 'package:flutter_counter/home/remote.dart';
+import 'package:flutter_counter/map/entity/CenterInfo.dart';
+import 'package:flutter_counter/map/entity/CenterType.dart';
+import 'package:flutter_counter/map/entity/ReserveStatus.dart';
+import 'package:flutter_counter/extensions.dart';
 
-class Vaccines {
-  late String lastUpdDate;
-  late Set<Vaccine> vaccines;
+class RemoteVaccines {
+  late String lastUpdateDate;
+  late Set<RemoteVaccine> vaccines;
 
-  Vaccines(this.lastUpdDate, this.vaccines);
+  RemoteVaccines(this.lastUpdateDate, this.vaccines);
 }
 
-class Vaccine {
+class RemoteVaccine {
   late String name;
-  late Set<Region> regions;
+  late Set<RemoteRegion> regions;
 
-  Vaccine(this.name, this.regions);
+  RemoteVaccine(this.name, this.regions);
 }
 
-class Region {
+class RemoteRegion {
   late String name;
-  late Set<District> districts;
+  late Set<RemoteDistrict> districts;
 
-  Region(this.name, this.districts);
+  RemoteRegion(this.name, this.districts);
 }
 
-class District {
+class RemoteDistrict {
   late String name;
-  late Set<MyCenter> centers;
+  late Set<RemoteCenter> centers;
 
-  District(this.name, this.centers);
+  RemoteDistrict(this.name, this.centers);
 }
 
-class MyCenter {
+class RemoteCenter {
   late String name;
   late String cname;
   late String sname;
   late String type;
-  late Set<Quota> quotas;
+  late Set<RemoteQuota> quotas;
 
-  MyCenter(this.name, this.cname, this.sname, this.type, this.quotas);
+  RemoteCenter(this.name, this.cname, this.sname, this.type, this.quotas);
 }
 
-class Quota {
+class RemoteQuota {
   late String date;
   late String status;
 
-  Quota(this.date, this.status);
+  RemoteQuota(this.date, this.status);
+}
+
+class MyCenter {
+  late String vaccine;
+  late DateTime lastUpdateAt;
+  late DateTime dateTime;
+  late String region;
+  late String district;
+  late Set<ClinicType> types;
+  late ReserveStatus status;
+  late String name;
+  late String address;
+  late double lat;
+  late double lng;
+
+  MyCenter(this.dateTime, this.region, this.district, this.types, this.status, this.address, this.lat,
+      this.lng, this.lastUpdateAt, this.name, this.vaccine);
 }
 
 class Repo {
@@ -58,38 +78,45 @@ class Repo {
             });
   }
 
-  Future<Vaccines> getAllVaccineInfos() {
-    return Future.delayed(
-        Duration(seconds: 2),
-        () => Vaccines("06/03/2021 10:55 PM", {
-              Vaccine("BioNTech/Fosun", {
-                Region("HKI", {
-                  District("Central and Western", {
-                    MyCenter("Community Vaccination Centre, Sun Yat Sen Memorial Park Sports Centre",
-                        "中山紀念公園體育館社區疫苗接種中心", "中山纪念公园体育馆社区疫苗接种中心", "CVC", {
-                      Quota("19/03", "0"),
-                      Quota("17/03", "2"),
-                      Quota("11/03", "1"),
-                      Quota("12/03", "0"),
-                      Quota("13/03", "2"),
-                    })
-                  })
-                }),
-              }),
-              Vaccine("Sinovac", {
-                Region("HKI", {
-                  District("Central and Western", {
-                    MyCenter("Sai Ying Pun Jockey Club General Out-patient Clinic", "西營盤賽馬會普通科門診診所",
-                        "西营盘赛马会普通科门诊诊所", "HA", {
-                      Quota("19/03", "0"),
-                      Quota("17/03", "2"),
-                      Quota("11/03", "1"),
-                      Quota("12/03", "0"),
-                      Quota("13/03", "2"),
-                    })
-                  })
-                }),
-              }),
-            }));
+  Future<Set<MyCenter>> getAllVaccineInfos() async {
+    var data = await Remote().getVaccines();
+    var centerLocationInfos = await getAllCenterInfos();
+    Set<MyCenter> centers = {};
+
+    data.vaccines.forEach((vaccine) {
+      vaccine.regions.forEach((region) {
+        region.districts.forEach((district) {
+          district.centers.forEach((center) {
+            center.quotas.forEach((quota) {
+              var reserveDate = quota.date.parseLiteral();
+              var lastUpdateAt = data.lastUpdateDate.parseLiteral();
+              // not available
+              var status = ReserveStatus.AVAILABLE;
+              if (quota.status == "0") {
+                status = ReserveStatus.FULL;
+              } else if (quota.status == "1") {
+                status = ReserveStatus.URGENT;
+              } else if (quota.status == "2") {
+                status = ReserveStatus.AVAILABLE; // fixme verify
+              }
+              var clinicType = ClinicType.UNKNOWN;
+              if (center.type == "CVV") {
+                clinicType = ClinicType.CVV;
+              } else if (center.type == "HA") {
+                clinicType = ClinicType.HA;
+              }
+              var info = centerLocationInfos.firstWhere((centerInfo) => centerInfo.address == center.cname);
+              if (info != null) {
+                var tmp = MyCenter(reserveDate, region.name, district.name, {clinicType}, status, center.cname,
+                    info.lat, info.lng, lastUpdateAt, center.name, vaccine.name);
+                centers.add(tmp);
+              }
+            });
+          });
+        });
+      });
+    });
+    return centers;
   }
+
 }

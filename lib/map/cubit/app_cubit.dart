@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_counter/map/module/CenterInfo.dart';
+import 'package:flutter_counter/map/entity/CenterInfo.dart';
 import 'package:flutter_counter/map/state/app_state.dart';
 
 class AppCubit extends Cubit<AppState> {

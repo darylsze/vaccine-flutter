@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_counter/home/cubit.dart';
+import 'package:flutter_counter/home/representation.dart';
 import 'package:flutter_counter/home/view.dart';
 import 'package:flutter_counter/repo/repo.dart';
 
@@ -14,10 +15,10 @@ class HomePage extends StatelessWidget {
         child: MaterialApp(
           title: "_title",
           home: FutureBuilder(
-              future: Repo().getAllVaccineInfos(),
+              future: context.read<HomeCubit>().getDatePages(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return HomeView(snapshot.data as Vaccines);
+                  return HomeView(snapshot.data as Set<VaccineModel>);
                 } else if (snapshot.hasError) {
                   return Center(child: Text("${snapshot.error}"));
                 }

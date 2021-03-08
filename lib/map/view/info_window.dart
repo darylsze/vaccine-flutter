@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_counter/map/module/CenterInfo.dart';
-import 'package:flutter_counter/map/module/ReserveStatus.dart';
+import 'package:flutter_counter/map/entity/CenterInfo.dart';
+import 'package:flutter_counter/map/entity/ReserveStatus.dart';
 
 class MyInfoWindow extends StatelessWidget {
   CenterInfo center;

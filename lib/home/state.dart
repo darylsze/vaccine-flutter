@@ -1,13 +1,16 @@
+import 'package:flutter_counter/home/representation.dart';
 import 'package:flutter_counter/repo/repo.dart';
 
 class HomeState {
   bool shouldShowAvailableCenterOnly = true;
   DateTime selectedDateTime = DateTime.now();
-  Vaccine? selectedVaccine;
+  VaccineModel? selectedVaccine;
+  Set<DateTime> allVaccineDates = {};
+  DatePageModel? datePageForSelectedVaccine;
 
   HomeState(this.shouldShowAvailableCenterOnly, this.selectedDateTime, this.selectedVaccine);
 
-  HomeState copyWith({required Vaccine currentVaccine}) {
+  HomeState copyWith({required VaccineModel currentVaccine}) {
       return HomeState(shouldShowAvailableCenterOnly, selectedDateTime, currentVaccine);
   }
 }

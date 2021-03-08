@@ -1,6 +1,6 @@
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_counter/map/module/CenterInfo.dart';
+import 'package:flutter_counter/map/entity/CenterInfo.dart';
 
 abstract class AppState extends Equatable {}
 
