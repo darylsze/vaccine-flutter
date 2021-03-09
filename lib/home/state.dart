@@ -5,14 +5,15 @@ class HomeState {
   bool shouldShowAvailableCenterOnly = true;
   DateTime selectedDateTime = DateTime.now();
   VaccineModel? selectedVaccine;
-  Set<DateTime> allVaccineDates = {};
-  DatePageModel? datePageForSelectedVaccine;
+  List<DateTime> allDates = [];
+  List<DatePageModel> allPages = [];
 
   HomeState(
       this.shouldShowAvailableCenterOnly,
       this.selectedDateTime,
       this.selectedVaccine,
-      this.allVaccineDates
+      this.allDates,
+      this.allPages
   );
 
   HomeState copyWith({
@@ -22,7 +23,8 @@ class HomeState {
           shouldShowAvailableCenterOnly,
           selectedDateTime,
           currentVaccine,
-          currentVaccine.datePage.map((e) => e.date).toSet()
+          currentVaccine.datePage.map((e) => e.date).toList()..sort(),
+          currentVaccine.datePage.toList()
       );
   }
 }

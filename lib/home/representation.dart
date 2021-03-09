@@ -18,15 +18,17 @@ class DatePageModel {
 }
 
 class RegionModel {
+  String name;
   Set<DistrictModel> districts;
 
-  RegionModel(this.districts);
+  RegionModel(this.name, this.districts);
 }
 
 class DistrictModel {
+  String name;
   Set<CenterModel> centers;
 
-  DistrictModel(this.centers);
+  DistrictModel(this.name, this.centers);
 }
 
 class CenterModel {
@@ -63,10 +65,10 @@ class HomeViewModel {
                     Set<CenterModel> centers = centersByDistrict
                         .map((e) => CenterModel(e.status, e.address, e.address, e.lat, e.lng))
                         .toSet();
-                    districts.add(DistrictModel(centers));
+                    districts.add(DistrictModel(district, centers));
                   },
                 );
-                regions.add(RegionModel(districts));
+                regions.add(RegionModel(region, districts));
               },
             );
             page.add(DatePageModel(date, regions));

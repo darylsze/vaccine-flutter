@@ -7,6 +7,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 enum ReserveStatus { FULL, AVAILABLE , URGENT }
 
 extension ParseToString on ReserveStatus {
+  String toName() {
+    switch (this) {
+      case ReserveStatus.AVAILABLE: {
+        return "可供預約";
+      }
+      case ReserveStatus.FULL: {
+        return "已滿";
+
+      }
+      case ReserveStatus.URGENT: {
+        return "只餘小量";
+
+      }
+      default: {
+        return "";
+      }
+    }
+  }
   BitmapDescriptor toMarkerColor() {
     switch (this) {
       case ReserveStatus.AVAILABLE: {
