@@ -39,7 +39,7 @@ class MyInfoWindow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                center.name,
+                center.cName,
                 style: new TextStyle(
                     fontSize: 12.0,
                     color: Colors.black),

@@ -3,14 +3,14 @@ import 'package:equatable/equatable.dart';
 import 'ReserveStatus.dart';
 
 class CenterInfo extends Equatable {
-  String name;
+  String cName;
   String address;
   double lat;
   double lng;
   ReserveStatus status;
 
-  CenterInfo(this.name, this.address, this.lat, this.lng, this.status);
+  CenterInfo({ required this.cName, required this.address, required this.lat, required this.lng, required this.status });
 
   @override
-  List<Object> get props => [name, address, lat, lng, status];
+  List<Object> get props => [address, cName, lat, lng, status];
 }

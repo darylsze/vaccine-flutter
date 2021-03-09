@@ -1,81 +1,44 @@
+import 'package:flutter_counter/extensions.dart';
 import 'package:flutter_counter/home/remote.dart';
+import 'package:flutter_counter/home/remote_vaccines_entity.dart';
 import 'package:flutter_counter/map/entity/CenterInfo.dart';
 import 'package:flutter_counter/map/entity/CenterType.dart';
 import 'package:flutter_counter/map/entity/ReserveStatus.dart';
-import 'package:flutter_counter/extensions.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class RemoteVaccines {
-  late String lastUpdateDate;
-  late Set<RemoteVaccine> vaccines;
+part 'repo.g.dart';
 
-  RemoteVaccines(this.lastUpdateDate, this.vaccines);
-}
-
-class RemoteVaccine {
-  late String name;
-  late Set<RemoteRegion> regions;
-
-  RemoteVaccine(this.name, this.regions);
-}
-
-class RemoteRegion {
-  late String name;
-  late Set<RemoteDistrict> districts;
-
-  RemoteRegion(this.name, this.districts);
-}
-
-class RemoteDistrict {
-  late String name;
-  late Set<RemoteCenter> centers;
-
-  RemoteDistrict(this.name, this.centers);
-}
-
-class RemoteCenter {
-  late String name;
-  late String cname;
-  late String sname;
-  late String type;
-  late Set<RemoteQuota> quotas;
-
-  RemoteCenter(this.name, this.cname, this.sname, this.type, this.quotas);
-}
-
-class RemoteQuota {
-  late String date;
-  late String status;
-
-  RemoteQuota(this.date, this.status);
-}
-
+@JsonSerializable()
 class MyCenter {
   late String vaccine;
-  late DateTime lastUpdateAt;
   late DateTime dateTime;
   late String region;
   late String district;
   late Set<ClinicType> types;
   late ReserveStatus status;
-  late String name;
-  late String address;
+  late String cName;
+  late String engName;
   late double lat;
   late double lng;
 
-  MyCenter(this.dateTime, this.region, this.district, this.types, this.status, this.address, this.lat,
-      this.lng, this.lastUpdateAt, this.name, this.vaccine);
+  MyCenter(
+      {required this.dateTime,
+      required this.region,
+      required this.district,
+      required this.types,
+      required this.status,
+      required this.engName,
+      required this.lat,
+      required this.lng,
+      required this.cName,
+      required this.vaccine});
+
+  Map<String, dynamic> toJson() => _$MyCenterToJson(this);
 }
 
 class Repo {
-  Future<Set<CenterInfo>> getAllCenterInfos() {
-    return Future.delayed(
-        Duration(seconds: 0),
-        () => {
-              CenterInfo("Community Vaccination Centre, Sun Yat Sen Memorial Park Sports Centre", "香港西營盤東邊街北18號", 22.2900426, 114.1435092, ReserveStatus.FULL),
-              CenterInfo("Sai Ying Pun Jockey Club General Out-patient Clinic", "香港西營盤皇后大道西134號", 22.3173771, 114.259532, ReserveStatus.AVAILABLE),
-              CenterInfo("c", "c", 22.2848009, 114.2236058, ReserveStatus.URGENT),
-              CenterInfo("d", "d", 22.3608107, 114.1253342, ReserveStatus.FULL),
-            });
+  Future<Set<CenterInfo>> getAllCenterInfos() async {
+    return await Remote().getAllCenterLocationInfos();
   }
 
   Future<Set<MyCenter>> getAllVaccineInfos() async {
@@ -88,11 +51,11 @@ class Repo {
     data.vaccines.forEach((vaccine) {
       vaccine.regions.forEach((region) {
         region.districts.forEach((district) {
-          district.centers.forEach((center) {
-            center.quotas.forEach((quota) {
-              var reserveDate = quota.date.parseLiteral();
+          district.centers.forEach((RemoteCenter center) {
+            center.quota.forEach((RemoteQuota quota) {
+              var reserveDate = quota.date.parseDateLiteral();
               // print("reserveDate: $reserveDate");
-              var lastUpdateAt = data.lastUpdateDate.parseLiteral();
+              var lastUpdateAt = data.lastUpdDate.parseDateTimeLiteral();
               // print("lastUpdateAt: $lastUpdateAt");
               // not available
               var status = ReserveStatus.AVAILABLE;
@@ -112,21 +75,20 @@ class Repo {
               // print("centerLocationInfos: $centerLocationInfos");
               try {
                 var info = centerLocationInfos.firstWhere((centerInfo) =>
-                centerInfo.name == center.name);
+                centerInfo.cName == center.cname);
                 print("info: $info");
                 if (info != null) {
                   var tmp = MyCenter(
-                      reserveDate,
-                      region.name,
-                      district.name,
-                      {clinicType},
-                      status,
-                      center.cname,
-                      info.lat,
-                      info.lng,
-                      lastUpdateAt,
-                      center.name,
-                      vaccine.name);
+                      dateTime: reserveDate,
+                      region: region.name,
+                      district: district.name,
+                      types: {clinicType},
+                      status: status,
+                      cName: center.cname,
+                      lat: info.lat,
+                      lng: info.lng,
+                      engName: center.engName,
+                      vaccine: vaccine.name);
                   centers.add(tmp);
                 }
               } catch (e) {

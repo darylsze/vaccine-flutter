@@ -6,5 +6,5 @@ import 'counter_observer.dart';
 
 void main() {
   Bloc.observer = CounterObserver();
-  runApp(const CounterApp());
+  runApp(CounterApp());
 }
