@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vaccine_hk/centerDetails/page.dart';
@@ -28,6 +29,16 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
+      Fluttertoast.showToast(
+          msg: "已切換至${state.selectedVaccine!.vaccine}疫苗",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.teal[600],
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+
       if (state.version > 0) {
         print("version: ${state.version}");
         return DefaultTabController(
@@ -36,6 +47,9 @@ class HomeView extends StatelessWidget {
             appBar: AppBar(
               title: const Text('安心打疫苗'),
               actions: [
+                IconButton(icon: Icon(Icons.merge_type), onPressed: () {
+                  context.read<HomeCubit>().switchVaccine();
+                }),
                 IconButton(icon: Icon(Icons.refresh), onPressed: () {
                   context.read<HomeCubit>().refreshPage();
                 }),
@@ -127,8 +141,8 @@ class HomeView extends StatelessWidget {
                   return Tab(
                     child: Column(
                       children: [
-                        Text(e.toHumanFriendly(), style: TextStyle(fontSize: 17)),
-                        Text(e.toWeekDay(), style: TextStyle(fontSize: 15)),
+                        Text(e.toHumanFriendly(), style: TextStyle(fontSize: 15)),
+                        Text(e.toWeekDay(), style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   );
@@ -137,7 +151,7 @@ class HomeView extends StatelessWidget {
             ),
             body: TabBarView(
               physics: NeverScrollableScrollPhysics(),
-              children: state.allPages.map((e) => TabChildPage(e.regions)).toList(),
+              children: state.allPages.map((e) => TabChildPage(state.selectedVaccine!.vaccine, e.regions)).toList(),
             ),
           ),
         );
@@ -150,8 +164,9 @@ class HomeView extends StatelessWidget {
 
 class TabChildPage extends StatelessWidget {
   Set<RegionModel> regions;
+  String currentVaccine;
 
-  TabChildPage(this.regions){
+  TabChildPage(this.currentVaccine, this.regions){
     print("regions size: ${regions.length}");
   }
 
@@ -166,7 +181,11 @@ class TabChildPage extends StatelessWidget {
       MapEntry(1, Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text("最後更新: $lastUpdateAtDisplay", style: TextStyle(color: Colors.grey[600])),
-      ))
+      )),
+      MapEntry(2, Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("目前顯示疫苗種類: $currentVaccine", style: TextStyle(color: Colors.grey[600])),
+      )),
     ]);
     return new ListView.builder(
       itemCount: regions.length + prependItems.length,

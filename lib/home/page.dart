@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // print(snapshot.data)
-            context.read<HomeCubit>().selectVaccine((snapshot.data as Set<VaccineModel>).first);
+            context.read<HomeCubit>().setAllVaccines(snapshot.data as Set<VaccineModel>);
             return HomeView();
           } else if (snapshot.hasError) {
             return Center(child: Text("${snapshot.error}"));

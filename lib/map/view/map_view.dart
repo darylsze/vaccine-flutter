@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaccine_hk/map/cubit/app_cubit.dart';
@@ -85,6 +87,8 @@ class MapView extends StatelessWidget {
         myLocationButtonEnabled: false,
         myLocationEnabled: false,
         scrollGesturesEnabled: true,
+        zoomGesturesEnabled: true,
+        gestureRecognizers: Set()..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
         markers: markers);
   }
 
