@@ -1,4 +1,4 @@
-package com.example.flutter_counter
+package com.rejoy.vaccine_hk
 
 import io.flutter.embedding.android.FlutterActivity
 

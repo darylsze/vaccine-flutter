@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "994786911738",
+    "project_id": "vaccine-hk",
+    "storage_bucket": "vaccine-hk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:994786911738:android:9421eb2b8e0d27991bf043",
+        "android_client_info": {
+          "package_name": "com.rejoy.vaccine_hk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "994786911738-2m0ar9j5vqofllm59s0q7o26e8ba181i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9J7G0tjcqhcwr-2NL5Vrmo5fmJ2er2i0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "994786911738-2m0ar9j5vqofllm59s0q7o26e8ba181i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
