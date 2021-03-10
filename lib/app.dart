@@ -10,21 +10,23 @@ class Application extends StatelessWidget {
     return FutureBuilder(
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
-          print(snapshot);
-          return MaterialApp(
-              theme: ThemeData(
-                brightness: Brightness.light,
-                primaryColor: Colors.teal[700],
-              ),
-              darkTheme: ThemeData(
-                brightness: Brightness.dark,
-                // additional settings go here
-              ),
-              initialRoute: '/',
-              routes: {
-                '/': (context) => HomePage(),
-                CenterDetailsPage.routeName: (context) => CenterDetailsPage()
-              });
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MaterialApp(
+                theme: ThemeData(
+                  brightness: Brightness.light,
+                  primaryColor: Colors.teal[700],
+                ),
+                darkTheme: ThemeData(
+                  brightness: Brightness.dark,
+                  // additional settings go here
+                ),
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => HomePage(),
+                  CenterDetailsPage.routeName: (context) => CenterDetailsPage()
+                });
+          }
+          return CircularProgressIndicator();
         });
   }
 }

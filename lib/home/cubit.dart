@@ -6,6 +6,7 @@ import 'package:vaccine_hk/repo/repo.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit()
       : super(HomeState(
+            version: 1,
             shouldShowAvailableCenterOnly: true,
             selectedDateTime: DateTime.now(),
             allPages: [],
@@ -14,6 +15,10 @@ class HomeCubit extends Cubit<HomeState> {
 
   void selectVaccine(VaccineModel selected) {
     emit(state.copyWith(currentVaccine: selected));
+  }
+
+  void refreshPage() {
+    emit(state.refresh());
   }
 
   // no filter

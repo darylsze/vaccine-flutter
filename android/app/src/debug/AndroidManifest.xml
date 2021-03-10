@@ -6,4 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyAg1BOx5TJf_uuC7ynvlUrZre0vVEjvG2k"/>
+    <application usesCleartextTraffic="true">
+        <!-- possibly other elements -->
+    </application>
 </manifest>

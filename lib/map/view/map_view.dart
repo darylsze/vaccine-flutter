@@ -86,7 +86,7 @@ class MapView extends StatelessWidget {
         onMapCreated: _controller.complete,
         myLocationButtonEnabled: false,
         myLocationEnabled: false,
-        scrollGesturesEnabled: false,
+        scrollGesturesEnabled: true,
         markers: markers);
   }
 

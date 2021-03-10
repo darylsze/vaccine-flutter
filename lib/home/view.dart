@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:vaccine_hk/centerDetails/page.dart';
 import 'package:vaccine_hk/home/cubit.dart';
 import 'package:vaccine_hk/home/viewModel.dart';
@@ -38,67 +40,75 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
-      return DefaultTabController(
-        length: state.allDates.length,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('安心打疫苗'),
-            actions: [
-              PopupMenuButton<String>(
-                onSelected: handleClick,
-                itemBuilder: (BuildContext context) {
-                  Set<HomeMenuBottom> menuOptions = {};
-                  if (state.showAvailableOnly) {
-                    menuOptions.add(HomeMenuBottom.SHOW_AVAILABLE);
-                  } else {
-                    menuOptions.add(HomeMenuBottom.SHOW_ALL);
-                  }
-                  return menuOptions.map((HomeMenuBottom choice) {
-                    if (choice == HomeMenuBottom.SHOW_AVAILABLE) {
-                      return PopupMenuItem<String>(
-                        value: "",
-                        child: Row(
-                          children: [
-                            Text("只顯示尚有餘額"),
-                            Checkbox(value: true, onChanged: (bool) {
-
-                            }),
-                          ],
-                        ),
-                      );
+      if (state.version > 0) {
+        print("version: ${state.version}");
+        return DefaultTabController(
+          length: state.allDates.length,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('安心打疫苗'),
+              actions: [
+                IconButton(icon: Icon(Icons.refresh), onPressed: () {
+                  context.read<HomeCubit>().refreshPage();
+                }),
+                PopupMenuButton<String>(
+                  onSelected: handleClick,
+                  itemBuilder: (BuildContext context) {
+                    Set<HomeMenuBottom> menuOptions = {};
+                    if (state.showAvailableOnly) {
+                      menuOptions.add(HomeMenuBottom.SHOW_AVAILABLE);
+                    } else {
+                      menuOptions.add(HomeMenuBottom.SHOW_ALL);
                     }
-                    return PopupMenuItem<String>(
-                      value: "not impl",
-                      child: Text("not impl"),
-                    );
-                  }).toList();
-                },
+                    return menuOptions.map((HomeMenuBottom choice) {
+                      if (choice == HomeMenuBottom.SHOW_AVAILABLE) {
+                        return PopupMenuItem<String>(
+                          value: "",
+                          child: Row(
+                            children: [
+                              Text("只顯示尚有餘額"),
+                              Checkbox(value: true, onChanged: (bool) {
+
+                              }),
+                            ],
+                          ),
+                        );
+                      }
+                      return PopupMenuItem<String>(
+                        value: "not impl",
+                        child: Text("not impl"),
+                      );
+                    }).toList();
+                  },
+                ),
+              ],
+              bottom: TabBar(
+                indicator: UnderlineTabIndicator(
+                  borderSide:
+                  BorderSide(color: Colors.white, width: 4.0),
+                ),
+                isScrollable: true,
+                tabs: state.allDates.map((e) {
+                  return Tab(
+                    child: Column(
+                      children: [
+                        Text(e.toHumanFriendly(), style: TextStyle(fontSize: 17)),
+                        Text(e.toWeekDay(), style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
+                  );
+                }).toList(),
               ),
-            ],
-            bottom: TabBar(
-              indicator: UnderlineTabIndicator(
-                borderSide:
-                BorderSide(color: Colors.white, width: 4.0),
-              ),
-              isScrollable: true,
-              tabs: state.allDates.map((e) {
-                return Tab(
-                  child: Column(
-                    children: [
-                      Text(e.toHumanFriendly(), style: TextStyle(fontSize: 17)),
-                      Text(e.toWeekDay(), style: TextStyle(fontSize: 15)),
-                    ],
-                  ),
-                );
-              }).toList(),
+            ),
+            body: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+              children: state.allPages.map((e) => TabChildPage(e.regions)).toList(),
             ),
           ),
-          body: TabBarView(
-            // physics: NeverScrollableScrollPhysics(),
-            children: state.allPages.map((e) => TabChildPage(e.regions)).toList(),
-          ),
-        ),
-      );
+        );
+      } else {
+        throw Exception();
+      }
     });
   }
 }
@@ -112,16 +122,25 @@ class TabChildPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String lastUpdateAtDisplay = DateFormat("dd-MM-yyyy hh:mm:ss a").format(DateTime.now());
+    Map<int, Widget> prependItems = Map.fromEntries([
+      MapEntry(0, SizedBox(
+        height: 250,
+        child: MapView(),
+      )),
+      MapEntry(1, Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("最後更新: $lastUpdateAtDisplay", style: TextStyle(color: Colors.grey[600])),
+      ))
+    ]);
     return new ListView.builder(
-      itemCount: regions.length + 1,
+      itemCount: regions.length + prependItems.length,
       itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return SizedBox(
-            height: 250,
-            child: MapView(),
-          );
+        bool shouldShowExtraItem = prependItems.entries.any((element) => element.key == index);
+        if (shouldShowExtraItem) {
+          return prependItems.entries.toList()[index].value;
         } else {
-          return RegionCell(regions.elementAt(index - 1));
+          return RegionCell(regions.elementAt(index - prependItems.length));
         }
       },
     );
