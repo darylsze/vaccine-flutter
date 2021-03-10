@@ -9,8 +9,29 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="安心打疫苗"
         android:icon="@mipmap/ic_launcher">
-        <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyAg1BOx5TJf_uuC7ynvlUrZre0vVEjvG2k"/>
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAg1BOx5TJf_uuC7ynvlUrZre0vVEjvG2k" />
+<!--        &lt;!&ndash; Set custom default icon. This is used when no icon is set for incoming notification messages.-->
+<!--     See README(https://goo.gl/l4GJaQ) for more. &ndash;&gt;-->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_icon"-->
+<!--            android:resource="@drawable/ic_stat_ic_notification" />-->
+<!--        &lt;!&ndash; Set color used with incoming notification messages. This is used when no color is set for the incoming-->
+<!--             notification message. See README(https://goo.gl/6BKBk7) for more. &ndash;&gt;-->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_color"-->
+<!--            android:resource="@color/colorAccent" />-->
         <activity
             android:name="com.rejoy.vaccine_hk.MainActivity"
             android:launchMode="singleTop"

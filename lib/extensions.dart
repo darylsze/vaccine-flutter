@@ -47,3 +47,11 @@ extension DateTimeExtension on DateTime {
     }
   }
 }
+
+extension UriEcode on String {
+  String urlEncode() {
+    return Uri.encodeComponent(this)
+        .replaceAll("(", "_")
+        .replaceAll(")", "_");
+  }
+}

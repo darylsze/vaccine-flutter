@@ -52,6 +52,7 @@ class HomeView extends StatelessWidget {
                   context.read<HomeCubit>().refreshPage();
                 }),
                 PopupMenuButton<String>(
+                  icon: Icon(Icons.settings),
                   onSelected: handleClick,
                   itemBuilder: (BuildContext context) {
                     Set<HomeMenuBottom> menuOptions = {};

@@ -1,3 +1,5 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vaccine_hk/extensions.dart';
 import 'package:vaccine_hk/home/remote.dart';
 import 'package:vaccine_hk/home/remote_vaccines_entity.dart';
@@ -15,24 +17,28 @@ class CenterDetailsVaccineTypeModel {
   // Set<CenterDetailsQuotaModel> quotas = {};
 
   CenterDetailsVaccineTypeModel({required this.name //, required this.quotas
-      });
+  });
 }
 
 class CenterDetailsModel {
   late DateTime lastUpdateAt;
   late String cName;
+  late String engName;
   late String address;
   late double lat;
   late double lng;
   Set<CenterDetailsVaccineTypeModel> vaccineType = {};
+  late bool hasSubscribed = false;
 
-  CenterDetailsModel(
-      {required this.lastUpdateAt,
-      required this.cName,
-      required this.address,
-      required this.lat,
-      required this.lng,
-      required this.vaccineType});
+  CenterDetailsModel({required this.lastUpdateAt,
+    required this.cName,
+    required this.engName,
+    required this.address,
+    required this.lat,
+    required this.lng,
+    required this.vaccineType,
+    required this.hasSubscribed
+  });
 }
 
 class CenterDetailsViewModel {
@@ -45,8 +51,12 @@ class CenterDetailsViewModel {
     double _lat = 0.0;
     double _lng = 0.0;
     String _address = "";
+    String _engName = "";
+    bool _hasGroupSubscribed = false;
 
     print("after api respnose");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> subscribedGroups = prefs.getStringList("centerNames") ?? [];
 
     allVaccinesInfos.vaccines.forEach((vaccine) {
       vaccine.regions.forEach((region) {
@@ -59,6 +69,8 @@ class CenterDetailsViewModel {
             _lat = geoLocation.lat;
             _lng = geoLocation.lng;
             _address = geoLocation.address;
+            _engName = center.engName;
+            _hasGroupSubscribed = subscribedGroups.any((element) => element == center.cname);
             // center.quota.forEach((RemoteQuota quota) {
             //   ReserveStatus status = ReserveStatus.AVAILABLE;
             //   if (quota.status == "0") {
@@ -74,14 +86,68 @@ class CenterDetailsViewModel {
       });
     });
 
+
     var result = CenterDetailsModel(
         cName: cName,
+        engName: _engName,
         address: _address,
         lat: _lat,
         lng: _lng,
         vaccineType: _supportedVaccine,
-        lastUpdateAt: _lastUpdateAt);
+        lastUpdateAt: _lastUpdateAt,
+        hasSubscribed: _hasGroupSubscribed
+    );
     print("getCenterDetailsFromAddress: $result");
     return result;
+  }
+
+  Future<bool> subscribeToCenter(CenterDetailsModel center) async {
+    // accept permission
+    var settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      await FirebaseMessaging.instance.subscribeToTopic(center.engName.urlEncode());
+      print("subscribed to ${center.cName} (actual: ${center.engName})");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> subscribedCenters = prefs.getStringList("centerNames") ?? [];
+      print("saved prefs: ${subscribedCenters}");
+      subscribedCenters.add(center.cName);
+      prefs.setStringList("centerNames", subscribedCenters);
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> unsubscribeToCenter(CenterDetailsModel center) async {
+    // accept permission
+    var settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      await FirebaseMessaging.instance.subscribeToTopic(center.engName.urlEncode());
+      print("unsubscribed to ${center.cName} (actual: ${center.engName})");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> subscribedCenters = prefs.getStringList("centerNames") ?? [];
+      print("saved prefs: ${subscribedCenters}");
+      subscribedCenters.removeWhere((element) => element == center.cName);
+      prefs.setStringList("centerNames", subscribedCenters);
+      return true;
+    }
+    return false;
   }
 }

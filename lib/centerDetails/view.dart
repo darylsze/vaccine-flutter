@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vaccine_hk/extensions.dart';
 import 'cubit.dart';
 import 'state.dart';
 import 'viewModel.dart';
@@ -33,21 +35,12 @@ class CenterDetailView extends StatelessWidget {
       return Colors.green;
     }
 
-    Color getNotifyMeButtonColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return Colors.redAccent;
-      }
-      return Colors.red;
-    }
-
     return BlocBuilder<CenterDetailsCubit, CenterDetailsState>(builder: (context, state) {
-      var center = state.currentCenter!;
-
+      var center = state.currentCenter;
+      if (center == null) {
+        // race condition
+        return Center(child: CircularProgressIndicator());
+      }
       return Scaffold(
         appBar: AppBar(
           title: const Text("地點詳情"),
@@ -127,20 +120,8 @@ class CenterDetailView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.resolveWith(getNotifyMeButtonColor)),
-                    onPressed: () async {
-                      _notifyMe(center);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('有位時通知我', style: TextStyle(fontSize: 25)),
-                    ),
-                  ),
-                ),
+                Container(margin: EdgeInsets.all(10),
+                    child: FcmNotificationButton(center: center,)),
               ],
             ),
           ),
@@ -180,35 +161,72 @@ class CenterDetailView extends StatelessWidget {
     } else {
       var zoom = 16;
       final Uri mapLaunchUri = Uri(
-          scheme: 'https',
-          path: 'www.google.com.hk/maps/search/$address/@$lat,$lng,${zoom}z',
+        scheme: 'https',
+        path: 'www.google.com.hk/maps/search/$address/@$lat,$lng,${zoom}z',
       );
       await launch(mapLaunchUri.toString());
     }
   }
+}
 
-  void _notifyMe(CenterDetailsModel center) async {
-    await Firebase.initializeApp();
-    // accept permission
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+class FcmNotificationButton extends StatelessWidget {
+  CenterDetailsModel center;
 
+  FcmNotificationButton({ required this.center });
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-    } else {
-      print('User declined or has not accepted permission');
+  Color getSubscribeCenterButtonColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return Colors.redAccent;
     }
-
+    return Colors.red;
   }
+
+  Color getUnsubscribeCenterButtonColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return Colors.redAccent;
+    }
+    return Colors.red;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CenterDetailsCubit, CenterDetailsState>(builder: (context, state) {
+      if (state.isCenterSubscribed) {
+        return ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith(getUnsubscribeCenterButtonColor)),
+          onPressed: () async {
+            context.read<CenterDetailsCubit>().unsubscribe(center);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('已訂閱通知\n點擊取消訂閱', style: TextStyle(fontSize: 20)),
+          ),
+        );
+      } else {
+        return ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith(getSubscribeCenterButtonColor)),
+          onPressed: () async {
+            context.read<CenterDetailsCubit>().subscribe(center);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('有位時通知我', style: TextStyle(fontSize: 25)),
+          ),
+        );
+      }
+    });
+  }
+
 }
