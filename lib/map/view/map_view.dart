@@ -17,7 +17,7 @@ class MapView extends StatelessWidget {
 
   static final CameraPosition _kGooglePlex = const CameraPosition(
     target: LatLng(22.3366269, 114.1744231), // hk
-    zoom: 12,
+    zoom: 10,
   );
 
   @override
@@ -46,40 +46,48 @@ class MapView extends StatelessWidget {
   }
 
   Widget _renderMapView(BuildContext context, Set<Marker> markers) {
-    return Stack(
-      children: [
-        GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: _controller.complete,
-            markers: markers),
-        Container(
-          child: BlocBuilder<AppCubit, AppState>(builder: (context, state) {
-            print("rerender map view");
-            if (state is! AppStateReady) {
-              return Container();
-            }
-            print("is app ready");
-            if (state.tappedCenter == null) {
-              return Container();
-            }
-            print("current is not null");
-
-            print("render row");
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MyInfoWindow(
-                  center: state.tappedCenter!,
-                  shouldShowRefreshButton:
-                      state.tappedCenter!.status != ReserveStatus.FULL,
-                )
-              ],
-            );
-          }),
-        )
-      ],
-    );
+    // return Stack(
+    //   children: [
+    //     GoogleMap(
+    //         mapType: MapType.normal,
+    //         initialCameraPosition: _kGooglePlex,
+    //         onMapCreated: _controller.complete,
+    //         markers: markers),
+    //     Container(
+    //       child: BlocBuilder<AppCubit, AppState>(builder: (context, state) {
+    //         print("rerender map view");
+    //         if (state is! AppStateReady) {
+    //           return Container();
+    //         }
+    //         print("is app ready");
+    //         if (state.tappedCenter == null) {
+    //           return Container();
+    //         }
+    //         print("current is not null");
+    //
+    //         print("render row");
+    //         return Row(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: [
+    //             MyInfoWindow(
+    //               center: state.tappedCenter!,
+    //               shouldShowRefreshButton:
+    //                   state.tappedCenter!.status != ReserveStatus.FULL,
+    //             )
+    //           ],
+    //         );
+    //       }),
+    //     )
+    //   ],
+    // );
+    return GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: _controller.complete,
+        myLocationButtonEnabled: false,
+        myLocationEnabled: false,
+        scrollGesturesEnabled: true,
+        markers: markers);
   }
 
 // Future<void> _goToTheLake() async {

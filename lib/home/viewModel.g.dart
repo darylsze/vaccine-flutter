@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'representation.dart';
+part of 'viewModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -75,6 +75,7 @@ CenterModel _$CenterModelFromJson(Map<String, dynamic> json) {
     region: json['region'] as String,
     engName: json['engName'] as String,
     cName: json['cName'] as String,
+    address: json['address'] as String,
     lat: (json['lat'] as num).toDouble(),
     lng: (json['lng'] as num).toDouble(),
   );
@@ -87,6 +88,7 @@ Map<String, dynamic> _$CenterModelToJson(CenterModel instance) =>
       'region': instance.region,
       'engName': instance.engName,
       'cName': instance.cName,
+      'address': instance.address,
       'lat': instance.lat,
       'lng': instance.lng,
     };

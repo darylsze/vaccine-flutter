@@ -1,4 +1,4 @@
-import 'package:flutter_counter/home/representation.dart';
+import 'package:flutter_counter/home/viewModel.dart';
 
 enum HomeMenuBottom {
   SHOW_AVAILABLE, SHOW_ALL

@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 // ignore: cascade_invocations
 
-part 'representation.g.dart';
+part 'viewModel.g.dart';
 
 @JsonSerializable()
 class VaccineModel {
@@ -56,6 +56,7 @@ class CenterModel {
   String region;
   String engName;
   String cName;
+  String address;
   double lat;
   double lng;
 
@@ -65,6 +66,7 @@ class CenterModel {
       required this.region,
       required this.engName,
       required this.cName,
+      required this.address,
       required this.lat,
       required this.lng});
 
@@ -114,6 +116,7 @@ class HomeViewModel {
                           .keys
                           .toSet();
                       var center = CenterModel(
+                        address: e.address,
                           cName: e.cName,
                           district: district,
                           engName: e.engName,

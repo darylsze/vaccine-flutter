@@ -14,6 +14,7 @@ class MyCenter {
   late DateTime dateTime;
   late String region;
   late String district;
+  late String address;
   late Set<ClinicType> types;
   late ReserveStatus status;
   late String cName;
@@ -22,7 +23,8 @@ class MyCenter {
   late double lng;
 
   MyCenter(
-      {required this.dateTime,
+      {required this.address,
+      required this.dateTime,
       required this.region,
       required this.district,
       required this.types,
@@ -79,6 +81,7 @@ class Repo {
                 print("info: $info");
                 if (info != null) {
                   var tmp = MyCenter(
+                      address: info.address,
                       dateTime: reserveDate,
                       region: region.name,
                       district: district.name,

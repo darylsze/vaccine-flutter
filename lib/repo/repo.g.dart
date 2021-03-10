@@ -8,6 +8,7 @@ part of 'repo.dart';
 
 MyCenter _$MyCenterFromJson(Map<String, dynamic> json) {
   return MyCenter(
+    address: json['address'] as String,
     dateTime: DateTime.parse(json['dateTime'] as String),
     region: json['region'] as String,
     district: json['district'] as String,
@@ -28,6 +29,7 @@ Map<String, dynamic> _$MyCenterToJson(MyCenter instance) => <String, dynamic>{
       'dateTime': instance.dateTime.toIso8601String(),
       'region': instance.region,
       'district': instance.district,
+      'address': instance.address,
       'types': instance.types.map((e) => _$ClinicTypeEnumMap[e]).toList(),
       'status': _$ReserveStatusEnumMap[instance.status],
       'cName': instance.cName,

@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_counter/centerDetaiils/cubit.dart';
@@ -64,17 +66,29 @@ class CenterDetailView extends StatelessWidget {
                     style: TextStyle(fontSize: 25),
                   ),
                 ),
-                Row(
-                  children: [
-                    Icon(Icons.location_on_rounded),
-                    Flexible(
-                      child: AutoSizeText(state.currentCenter?.address ?? "Unknown",
-                          style: TextStyle(fontSize: 20),
-                          minFontSize: 16,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
-                    )
-                  ],
+                InkWell(
+                  onTap: () async {
+                    _openGoogleMap(center.address, center.lat, center.lng);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.location_on_rounded),
+                      Flexible(
+                        child: AutoSizeText(center.address + " (點擊開啟地圖)" ?? "Unknown",
+                            style: TextStyle(fontSize: 20,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            minFontSize: 16,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox.fromSize(
+                  size: Size.fromHeight(15),
                 ),
                 _renderMapView(context: context, lat: center.lat, lng: center.lng),
                 SizedBox.fromSize(
@@ -138,10 +152,33 @@ class CenterDetailView extends StatelessWidget {
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
             target: LatLng(lat, lng), // hk
-            zoom: 15,
+            zoom: 14,
           ),
+          myLocationButtonEnabled: false,
+          myLocationEnabled: false,
+          scrollGesturesEnabled: false,
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+            Factory<OneSequenceGestureRecognizer>(
+              // () => ScaleGestureRecognizer(),
+                  () => HorizontalDragGestureRecognizer(),
+            ),
+          ].toSet(),
           onMapCreated: _controller.complete,
           markers: markers),
     );
+  }
+
+  _openGoogleMap(String address, double lat, double lng) async {
+    var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
+    if (await canLaunch(uri.toString())) {
+      await launch(uri.toString());
+    } else {
+      var zoom = 16;
+      final Uri mapLaunchUri = Uri(
+          scheme: 'https',
+          path: 'www.google.com.hk/maps/search/$address/@$lat,$lng,${zoom}z',
+      );
+      await launch(mapLaunchUri.toString());
+    }
   }
 }

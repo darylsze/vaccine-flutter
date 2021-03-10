@@ -1,10 +1,14 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_counter/centerDetaiils/page.dart';
 import 'package:flutter_counter/home/cubit.dart';
-import 'package:flutter_counter/home/representation.dart';
+import 'package:flutter_counter/home/viewModel.dart';
 import 'package:flutter_counter/home/state.dart';
 import 'package:flutter_counter/map/entity/ReserveStatus.dart';
+import 'package:flutter_counter/map/view/map_view.dart';
+import 'package:flutter_counter/extensions.dart';
 
 enum AppBarActionMenu { SHOW_AVAILABLE_ONLY }
 
@@ -38,7 +42,7 @@ class HomeView extends StatelessWidget {
         length: state.allDates.length,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('AppBar Demo'),
+            title: const Text('安心打疫苗'),
             actions: [
               PopupMenuButton<String>(
                 onSelected: handleClick,
@@ -75,12 +79,18 @@ class HomeView extends StatelessWidget {
               isScrollable: true,
               tabs: state.allDates.map((e) {
                 return Tab(
-                  child: Text('${e.day}/${e.month}'),
+                  child: Column(
+                    children: [
+                      Text(e.toHumanFriendly(), style: TextStyle(fontSize: 17)),
+                      Text(e.toWeekDay(), style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
                 );
               }).toList(),
             ),
           ),
           body: TabBarView(
+            // physics: NeverScrollableScrollPhysics(),
             children: state.allPages.map((e) => TabChildPage(e.regions)).toList(),
           ),
         ),
@@ -98,17 +108,26 @@ class TabChildPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // fixme change to list
-    return Container(
-        width: double.infinity,
-        child: ListView(children: regions.map((e) => RegionCard(e)).toList()));
+    return new ListView.builder(
+      itemCount: regions.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == 0) {
+          return SizedBox(
+            height: 250,
+            child: MapView(),
+          );
+        } else {
+          return RegionCell(regions.elementAt(index - 1));
+        }
+      },
+    );
   }
 }
 
-class RegionCard extends StatelessWidget {
+class RegionCell extends StatelessWidget {
   RegionModel region;
 
-  RegionCard(this.region) {
+  RegionCell(this.region) {
     print("district size: ${region.districts.length}");
   }
 
@@ -116,26 +135,20 @@ class RegionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(5),
-      child: Card(
-        elevation: 2,
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black38,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(3),
-          ),
-          child: Column(
-            children: [
-              Text(
-                region.name,
+      child: Container(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "地區：${region.name}",
                 style: TextStyle(fontSize: 28),
               ),
-              Column(children: region.districts.map((e) => DistrictRow(e)).toList())
-            ],
-          ),
+            ),
+            Column(children: region.districts.map((e) => DistrictRow(e)).toList())
+          ],
         ),
       ),
     );
@@ -150,20 +163,21 @@ class DistrictRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
       child: InkWell(
-        child: Card(
-          elevation: 2,
-          child: Column(
-            children: [
-              Text("地區：${district.name}"),
-              Container(
-                child: Column(
-                  children: district.dateCenters.map((e) => CenterRow(e)).toList(),
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "分區：${district.name}",
+                style: TextStyle(fontSize: 20),
               ),
-            ],
-          ),
+            ),
+            Column(
+              children: district.dateCenters.map((e) => CenterRow(e)).toList(),
+            ),
+          ],
         ),
       ),
     );
@@ -178,20 +192,22 @@ class CenterRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
       child: InkWell(
         child: GestureDetector(
           onTap: () => goToCenterDetails(context, centerForDate.center),
           child: Card(
+            elevation: 4,
             child: SizedBox(
               height: 56.0,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  new Expanded(
-                    child: ListTile(
-                      title: Text(centerForDate.center.cName)
-                    ),
+                  Expanded(
+                    child: AutoSizeText(centerForDate.center.cName,
+                      style: TextStyle(fontSize: 18),
+                      minFontSize: 16,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
                   ),
                   new Container(
                     color: centerForDate.status.toColor(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_counter/home/cubit.dart';
-import 'package:flutter_counter/home/representation.dart';
+import 'package:flutter_counter/home/viewModel.dart';
 import 'package:flutter_counter/home/view.dart';
 
 class HomePage extends StatelessWidget {

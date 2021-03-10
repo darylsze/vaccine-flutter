@@ -54,11 +54,11 @@ extension ParseToString on ReserveStatus {
         break;
       };
       case ReserveStatus.FULL: {
-        bgColor = Colors.red;
+        bgColor = Colors.grey;
         break;
       };
       case ReserveStatus.URGENT: {
-        bgColor = Colors.yellow;
+        bgColor = Colors.red;
         break;
       };
       default: {

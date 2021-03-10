@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_counter/home/representation.dart';
+import 'package:flutter_counter/home/viewModel.dart';
 import 'package:flutter_counter/home/state.dart';
 import 'package:flutter_counter/repo/repo.dart';
 
