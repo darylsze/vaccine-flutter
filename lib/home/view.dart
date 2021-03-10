@@ -1,29 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vaccine_hk/centerDetails/page.dart';
+import 'package:vaccine_hk/extensions.dart';
 import 'package:vaccine_hk/home/cubit.dart';
-import 'package:vaccine_hk/home/viewModel.dart';
 import 'package:vaccine_hk/home/state.dart';
+import 'package:vaccine_hk/home/viewModel.dart';
 import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
 import 'package:vaccine_hk/map/view/map_view.dart';
-import 'package:vaccine_hk/extensions.dart';
-
-enum AppBarActionMenu { SHOW_AVAILABLE_ONLY }
-
-extension ParseToString on AppBarActionMenu {
-  String toDisplayTitle() {
-    switch (this) {
-      case AppBarActionMenu.SHOW_AVAILABLE_ONLY:
-        return "只顯示可預約";
-      default:
-        return "";
-    }
-  }
-}
 
 class HomeView extends StatelessWidget {
   HomeView();
@@ -68,9 +56,7 @@ class HomeView extends StatelessWidget {
                           child: Row(
                             children: [
                               Text("只顯示尚有餘額"),
-                              Checkbox(value: true, onChanged: (bool) {
-
-                              }),
+                              Checkbox(value: true, onChanged: (bool) {}),
                             ],
                           ),
                         );
@@ -82,6 +68,54 @@ class HomeView extends StatelessWidget {
                     }).toList();
                   },
                 ),
+                IconButton(
+                    icon: Icon(Icons.notifications),
+                    onPressed: () async {
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      List<String> subscribedCenters = prefs.getStringList("centerNames") ?? [];
+                      await showDialog<void>(
+                        context: context,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(subscribedCenters.isEmpty
+                                ? "你目前沒有已訂閱的疫苗中心"
+                                : "已訂閱${subscribedCenters.length}個疫苗中心"),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: subscribedCenters.map((e) {
+                                  return Text(e.urlDecode());
+                                }).toList(),
+                              ),
+                            ),
+                            actions: subscribedCenters.isEmpty ? [
+                                TextButton(
+                                  child: Text('確認'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                            ] : [
+                              TextButton(
+                                child: Text('清除全部'),
+                                onPressed: () async {
+                                  // await FirebaseMessaging.instance.deleteToken();
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  prefs.remove("centerNames");
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('確認'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ]
+                          );
+                        },
+                      );
+                    }),
               ],
               bottom: TabBar(
                 indicator: UnderlineTabIndicator(

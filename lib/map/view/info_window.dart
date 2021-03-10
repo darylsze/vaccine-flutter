@@ -31,7 +31,7 @@ class MyInfoWindow extends StatelessWidget {
       margin: const EdgeInsets.only(top: 100),
       width: 300,
       height: 100,
-      color: center.status.toColor(),
+      // color: center.status.toColor(),
       child: Container(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -51,7 +51,8 @@ class MyInfoWindow extends StatelessWidget {
                     color: Colors.black),
               ),
               Text(
-                center.status.toReserveAdvise(),
+                "",
+                // center.status.toReserveAdvise(),
                 style: new TextStyle(
                     color: Colors.black),
               ),

@@ -54,4 +54,8 @@ extension UriEcode on String {
         .replaceAll("(", "_")
         .replaceAll(")", "_");
   }
+
+  String urlDecode() {
+    return Uri.decodeComponent(this);
+  }
 }

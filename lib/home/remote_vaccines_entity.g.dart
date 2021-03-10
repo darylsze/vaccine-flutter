@@ -6,6 +6,21 @@ part of 'remote_vaccines_entity.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+RemoteGetAllCenterLocationsResponse
+    _$RemoteGetAllCenterLocationsResponseFromJson(Map<String, dynamic> json) {
+  return RemoteGetAllCenterLocationsResponse(
+    centerLocations: (json['data'] as List<dynamic>)
+        .map((e) => CenterInfo.fromJson(e as Map<String, dynamic>))
+        .toSet(),
+  );
+}
+
+Map<String, dynamic> _$RemoteGetAllCenterLocationsResponseToJson(
+        RemoteGetAllCenterLocationsResponse instance) =>
+    <String, dynamic>{
+      'data': instance.centerLocations.toList(),
+    };
+
 RemoteVaccines _$RemoteVaccinesFromJson(Map<String, dynamic> json) {
   return RemoteVaccines(
     lastUpdDate: json['lastUpdDate'] as String,

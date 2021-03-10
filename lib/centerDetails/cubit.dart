@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'state.dart';
 import 'viewModel.dart';
@@ -8,10 +7,8 @@ class CenterDetailsCubit extends Cubit<CenterDetailsState> {
   CenterDetailsCubit() : super(CenterDetailsState(currentCenter: null, isCenterSubscribed: false));
 
   void selectCenter(CenterDetailsModel center) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool hasCenterSubscribed =
-        (prefs.getStringList("centerNames") ?? []).any((element) => element == center.cName);
-    emit(state.copyWith(newCurrentCenter: center, newIsSubscribed: hasCenterSubscribed));
+    print("current center: ${center.hasSubscribed}");
+    emit(state.copyWith(newCurrentCenter: center, newIsSubscribed: center.hasSubscribed));
   }
 
   void subscribe(CenterDetailsModel center) async {

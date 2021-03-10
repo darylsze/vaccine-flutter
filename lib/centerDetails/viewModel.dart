@@ -42,7 +42,7 @@ class CenterDetailsModel {
 }
 
 class CenterDetailsViewModel {
-  Future<CenterDetailsModel> getCenterDetailsFromAddress({required String cName}) async {
+  Future<CenterDetailsModel> getCenterDetailsFromName({required String cName}) async {
     var geolocation = await Remote().getAllCenterLocationInfos();
     var allVaccinesInfos = await Remote().getVaccines();
 
@@ -58,19 +58,17 @@ class CenterDetailsViewModel {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> subscribedGroups = prefs.getStringList("centerNames") ?? [];
 
+    RemoteCenter? matchesCenter = null;
+
+    
     allVaccinesInfos.vaccines.forEach((vaccine) {
       vaccine.regions.forEach((region) {
         region.districts.forEach((district) {
           district.centers.forEach((RemoteCenter center) {
             if (center.cname == cName) {
+              matchesCenter = center;
               _supportedVaccine.add(CenterDetailsVaccineTypeModel(name: vaccine.name));
             }
-            var geoLocation = geolocation.firstWhere((element) => element.cName == cName);
-            _lat = geoLocation.lat;
-            _lng = geoLocation.lng;
-            _address = geoLocation.address;
-            _engName = center.engName;
-            _hasGroupSubscribed = subscribedGroups.any((element) => element == center.cname);
             // center.quota.forEach((RemoteQuota quota) {
             //   ReserveStatus status = ReserveStatus.AVAILABLE;
             //   if (quota.status == "0") {
@@ -85,8 +83,20 @@ class CenterDetailsViewModel {
         });
       });
     });
-
-
+    
+    if (matchesCenter != null) {
+      var geoLocation = geolocation.firstWhere((element) => element.cName == cName);
+      _lat = geoLocation.lat;
+      _lng = geoLocation.lng;
+      _address = geoLocation.address;
+      _engName = matchesCenter!.engName;
+      _hasGroupSubscribed = subscribedGroups.any((element) {
+        print("comparing element: $element with ${_engName.urlEncode()}");
+        return element == _engName.urlEncode();
+      });
+      print("_hasGroupSubscribed: $_hasGroupSubscribed");
+    }
+    
     var result = CenterDetailsModel(
         cName: cName,
         engName: _engName,
@@ -114,12 +124,12 @@ class CenterDetailsViewModel {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      await FirebaseMessaging.instance.subscribeToTopic(center.engName.urlEncode());
-      print("subscribed to ${center.cName} (actual: ${center.engName})");
+      String encodedName = center.engName.urlEncode();
+      await FirebaseMessaging.instance.subscribeToTopic(encodedName);
+      print("subscribed to ${center.cName} (actual: ${encodedName})");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<String> subscribedCenters = prefs.getStringList("centerNames") ?? [];
-      print("saved prefs: ${subscribedCenters}");
-      subscribedCenters.add(center.cName);
+      subscribedCenters.add(encodedName);
       prefs.setStringList("centerNames", subscribedCenters);
       return true;
     }
@@ -139,12 +149,12 @@ class CenterDetailsViewModel {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      await FirebaseMessaging.instance.subscribeToTopic(center.engName.urlEncode());
-      print("unsubscribed to ${center.cName} (actual: ${center.engName})");
+      String encodedName = center.engName.urlEncode();
+      await FirebaseMessaging.instance.subscribeToTopic(encodedName);
+      print("unsubscribed to ${center.cName} (actual: ${encodedName})");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<String> subscribedCenters = prefs.getStringList("centerNames") ?? [];
-      print("saved prefs: ${subscribedCenters}");
-      subscribedCenters.removeWhere((element) => element == center.cName);
+      subscribedCenters.removeWhere((element) => element == encodedName);
       prefs.setStringList("centerNames", subscribedCenters);
       return true;
     }

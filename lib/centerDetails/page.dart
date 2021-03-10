@@ -25,7 +25,7 @@ class CenterDetailsPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => CenterDetailsCubit(),
       child: FutureBuilder(
-          future: CenterDetailsViewModel().getCenterDetailsFromAddress(cName: args.cName),
+          future: CenterDetailsViewModel().getCenterDetailsFromName(cName: args.cName),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               context.read<CenterDetailsCubit>().selectCenter(snapshot.data as CenterDetailsModel);

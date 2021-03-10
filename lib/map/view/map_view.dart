@@ -26,10 +26,8 @@ class MapView extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var markers = (snapshot.data as Set<CenterInfo>)
-                  .where((element) => element.status != ReserveStatus.FULL)
                   .map((marker) {
                 return Marker(
-                    icon: marker.status.toMarkerColor(),
                     position: LatLng(marker.lat, marker.lng),
                     markerId: MarkerId(marker.address),
                     onTap: () => context.read<AppCubit>().selectMarker(marker));

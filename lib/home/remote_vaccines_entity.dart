@@ -1,6 +1,18 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:vaccine_hk/map/entity/CenterInfo.dart';
 
 part 'remote_vaccines_entity.g.dart';
+
+@JsonSerializable()
+class RemoteGetAllCenterLocationsResponse {
+	@JsonKey(name: "data")
+	Set<CenterInfo> centerLocations;
+
+	RemoteGetAllCenterLocationsResponse({ required this.centerLocations });
+
+  static RemoteGetAllCenterLocationsResponse fromJson(Map<String, dynamic> json) => _$RemoteGetAllCenterLocationsResponseFromJson(json);
+	Map<String, dynamic> toJson() => _$RemoteGetAllCenterLocationsResponseToJson(this);
+}
 
 @JsonSerializable()
 class RemoteVaccines {
