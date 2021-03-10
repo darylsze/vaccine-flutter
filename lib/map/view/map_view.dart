@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_counter/map/cubit/app_cubit.dart';
-import 'package:flutter_counter/map/entity/CenterInfo.dart';
-import 'package:flutter_counter/map/entity/ReserveStatus.dart';
-import 'package:flutter_counter/map/state/app_state.dart';
-import 'package:flutter_counter/map/view/info_window.dart';
-import 'package:flutter_counter/repo/repo.dart';
+import 'package:vaccine_hk/map/cubit/app_cubit.dart';
+import 'package:vaccine_hk/map/entity/CenterInfo.dart';
+import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
+import 'package:vaccine_hk/repo/repo.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatelessWidget {
@@ -27,7 +25,9 @@ class MapView extends StatelessWidget {
           future: repo.getAllCenterInfos(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              var markers = (snapshot.data as Set<CenterInfo>).map((marker) {
+              var markers = (snapshot.data as Set<CenterInfo>)
+                  .where((element) => element.status != ReserveStatus.FULL)
+                  .map((marker) {
                 return Marker(
                     icon: marker.status.toMarkerColor(),
                     position: LatLng(marker.lat, marker.lng),
@@ -86,7 +86,7 @@ class MapView extends StatelessWidget {
         onMapCreated: _controller.complete,
         myLocationButtonEnabled: false,
         myLocationEnabled: false,
-        scrollGesturesEnabled: true,
+        scrollGesturesEnabled: false,
         markers: markers);
   }
 

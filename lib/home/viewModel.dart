@@ -1,6 +1,6 @@
 import "package:collection/collection.dart";
-import 'package:flutter_counter/map/entity/ReserveStatus.dart';
-import 'package:flutter_counter/repo/repo.dart';
+import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
+import 'package:vaccine_hk/repo/repo.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 // ignore: cascade_invocations

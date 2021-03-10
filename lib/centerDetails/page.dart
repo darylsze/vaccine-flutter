@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_counter/centerDetaiils/cubit.dart';
-import 'package:flutter_counter/centerDetaiils/view.dart';
-import 'package:flutter_counter/centerDetaiils/viewModel.dart';
+
+import 'cubit.dart';
+import 'view.dart';
+import 'viewModel.dart';
 
 class CenterDetailsPageArguments {
   final String cName;

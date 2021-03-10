@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_counter/home/viewModel.dart';
-import 'package:flutter_counter/home/state.dart';
-import 'package:flutter_counter/repo/repo.dart';
+import 'package:vaccine_hk/home/viewModel.dart';
+import 'package:vaccine_hk/home/state.dart';
+import 'package:vaccine_hk/repo/repo.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit()

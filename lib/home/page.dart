@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_counter/home/cubit.dart';
-import 'package:flutter_counter/home/viewModel.dart';
-import 'package:flutter_counter/home/view.dart';
+import 'package:vaccine_hk/home/cubit.dart';
+import 'package:vaccine_hk/home/viewModel.dart';
+import 'package:vaccine_hk/home/view.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

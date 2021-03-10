@@ -2,16 +2,18 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_counter/centerDetaiils/cubit.dart';
-import 'package:flutter_counter/centerDetaiils/state.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'cubit.dart';
+import 'state.dart';
+import 'viewModel.dart';
 
 class CenterDetailView extends StatelessWidget {
   final Completer<GoogleMapController> _controller = Completer();
@@ -129,7 +131,9 @@ class CenterDetailView extends StatelessWidget {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith(getNotifyMeButtonColor)),
-                    onPressed: () {},
+                    onPressed: () async {
+                      _notifyMe(center);
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text('有位時通知我', style: TextStyle(fontSize: 25)),
@@ -180,5 +184,21 @@ class CenterDetailView extends StatelessWidget {
       );
       await launch(mapLaunchUri.toString());
     }
+  }
+
+  void _notifyMe(CenterDetailsModel center) async {
+    // accept permission
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 }

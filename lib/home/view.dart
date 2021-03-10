@@ -2,13 +2,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_counter/centerDetaiils/page.dart';
-import 'package:flutter_counter/home/cubit.dart';
-import 'package:flutter_counter/home/viewModel.dart';
-import 'package:flutter_counter/home/state.dart';
-import 'package:flutter_counter/map/entity/ReserveStatus.dart';
-import 'package:flutter_counter/map/view/map_view.dart';
-import 'package:flutter_counter/extensions.dart';
+import 'package:vaccine_hk/centerDetails/page.dart';
+import 'package:vaccine_hk/home/cubit.dart';
+import 'package:vaccine_hk/home/viewModel.dart';
+import 'package:vaccine_hk/home/state.dart';
+import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
+import 'package:vaccine_hk/map/view/map_view.dart';
+import 'package:vaccine_hk/extensions.dart';
 
 enum AppBarActionMenu { SHOW_AVAILABLE_ONLY }
 
@@ -42,7 +42,7 @@ class HomeView extends StatelessWidget {
         length: state.allDates.length,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('安心打疫苗', style: TextStyle(fontSize: 28),),
+            title: const Text('安心打疫苗'),
             actions: [
               PopupMenuButton<String>(
                 onSelected: handleClick,

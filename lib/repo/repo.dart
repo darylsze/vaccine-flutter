@@ -1,9 +1,9 @@
-import 'package:flutter_counter/extensions.dart';
-import 'package:flutter_counter/home/remote.dart';
-import 'package:flutter_counter/home/remote_vaccines_entity.dart';
-import 'package:flutter_counter/map/entity/CenterInfo.dart';
-import 'package:flutter_counter/map/entity/CenterType.dart';
-import 'package:flutter_counter/map/entity/ReserveStatus.dart';
+import 'package:vaccine_hk/extensions.dart';
+import 'package:vaccine_hk/home/remote.dart';
+import 'package:vaccine_hk/home/remote_vaccines_entity.dart';
+import 'package:vaccine_hk/map/entity/CenterInfo.dart';
+import 'package:vaccine_hk/map/entity/CenterType.dart';
+import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'repo.g.dart';

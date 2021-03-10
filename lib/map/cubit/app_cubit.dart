@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_counter/map/entity/CenterInfo.dart';
-import 'package:flutter_counter/map/state/app_state.dart';
+import 'package:vaccine_hk/map/entity/CenterInfo.dart';
+import 'package:vaccine_hk/map/state/app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
   // ignore: public_member_api_docs

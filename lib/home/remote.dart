@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_counter/home/remote_vaccines_entity.dart';
-import 'package:flutter_counter/map/entity/CenterInfo.dart';
-import 'package:flutter_counter/map/entity/ReserveStatus.dart';
+import 'package:vaccine_hk/home/remote_vaccines_entity.dart';
+import 'package:vaccine_hk/map/entity/CenterInfo.dart';
+import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
 
 class Result<T> {
 }

@@ -33,11 +33,11 @@ extension ParseToString on ReserveStatus {
       };
       case ReserveStatus.FULL: {
         return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueRed);
+            BitmapDescriptor.hueRose);
       };
       case ReserveStatus.URGENT: {
         return BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueYellow);
+            BitmapDescriptor.hueRed);
       };
       default: {
         return BitmapDescriptor.defaultMarkerWithHue(

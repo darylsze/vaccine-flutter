@@ -1,4 +1,5 @@
-import 'package:flutter_counter/centerDetaiils/viewModel.dart';
+
+import 'viewModel.dart';
 
 class CenterDetailsState {
   CenterDetailsModel? currentCenter;
