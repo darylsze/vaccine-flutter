@@ -42,7 +42,7 @@ class HomeView extends StatelessWidget {
         length: state.allDates.length,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('安心打疫苗'),
+            title: const Text('安心打疫苗', style: TextStyle(fontSize: 28),),
             actions: [
               PopupMenuButton<String>(
                 onSelected: handleClick,
@@ -76,13 +76,17 @@ class HomeView extends StatelessWidget {
               ),
             ],
             bottom: TabBar(
+              indicator: UnderlineTabIndicator(
+                borderSide:
+                BorderSide(color: Colors.white, width: 4.0),
+              ),
               isScrollable: true,
               tabs: state.allDates.map((e) {
                 return Tab(
                   child: Column(
                     children: [
                       Text(e.toHumanFriendly(), style: TextStyle(fontSize: 17)),
-                      Text(e.toWeekDay(), style: TextStyle(fontSize: 13)),
+                      Text(e.toWeekDay(), style: TextStyle(fontSize: 15)),
                     ],
                   ),
                 );
@@ -203,11 +207,20 @@ class CenterRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Expanded(
-                    child: AutoSizeText(centerForDate.center.cName,
-                      style: TextStyle(fontSize: 18),
-                      minFontSize: 16,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: AutoSizeText(centerForDate.center.cName,
+                            style: TextStyle(fontSize: 18),
+                            minFontSize: 16,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
+                    ),
                   ),
                   new Container(
                     color: centerForDate.status.toColor(),
