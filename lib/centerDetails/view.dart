@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -11,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vaccine_hk/extensions.dart';
+import 'package:vaccine_hk/stringRes.dart';
+
 import 'cubit.dart';
 import 'state.dart';
 import 'viewModel.dart';
@@ -53,13 +52,14 @@ class CenterDetailView extends StatelessWidget {
               children: [
                 Text(
                   "上次更新時間: ${DateFormat("yyyy-MM-dd HH:mm:ss").format(center.lastUpdateAt)}",
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(color: Colors.grey),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    state.currentCenter?.cName ?? "Unknown",
-                    style: TextStyle(fontSize: 25),
+                  child: AutoSizeText(state.currentCenter?.cName ?? "Unknown",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,),
+                      minFontSize: 15,
+                      maxLines: 1
                   ),
                 ),
                 InkWell(
@@ -71,12 +71,12 @@ class CenterDetailView extends StatelessWidget {
                       Icon(Icons.location_on_rounded),
                       Flexible(
                         child: AutoSizeText(center.address + " (點擊開啟地圖)" ?? "Unknown",
-                            style: TextStyle(fontSize: 20,
+                            style: TextStyle(fontSize: 17,
                               color: Colors.blue,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                             ),
-                            minFontSize: 16,
+                            minFontSize: 14,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis),
                       )
@@ -90,20 +90,20 @@ class CenterDetailView extends StatelessWidget {
                 SizedBox.fromSize(
                   size: Size.fromHeight(50),
                 ),
-                Text("此地點提供疫苗的類型：", style: TextStyle(fontSize: 20)),
+                Text("此地點提供疫苗的類型：", style: TextStyle(fontSize: 16)),
                 ...center.vaccineType
                     .map((e) => Row(
                           children: [
                             Checkbox(value: true, onChanged: (bool) => {}),
                             Text(
                               e.name,
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(fontSize: 16),
                             ),
                           ],
                         ))
                     .toList(),
                 Container(
-                  margin: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(8),
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith(getBookingButtonColor)),
@@ -115,15 +115,21 @@ class CenterDetailView extends StatelessWidget {
                       }
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('立即預約', style: TextStyle(fontSize: 25)),
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text('立即預約', style: TextStyle(fontSize: 20)),
                     ),
                   ),
                 ),
-                Container(margin: EdgeInsets.all(10),
+                Container(margin: EdgeInsets.all(8),
                     child: FcmNotificationButton(center: center,)),
               ],
             ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+          child: AdmobBanner(
+            adUnitId: AdUnits.CENTER_DETAILS_BOTTOM_BANNER,
+            adSize: AdmobBannerSize.BANNER,
           ),
         ),
       );
@@ -140,32 +146,39 @@ class CenterDetailView extends StatelessWidget {
             target: LatLng(lat, lng), // hk
             zoom: 14,
           ),
-          myLocationButtonEnabled: false,
-          myLocationEnabled: false,
-          scrollGesturesEnabled: false,
-          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-            Factory<OneSequenceGestureRecognizer>(
-              // () => ScaleGestureRecognizer(),
-                  () => HorizontalDragGestureRecognizer(),
-            ),
-          ].toSet(),
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+          scrollGesturesEnabled: true,
+          gestureRecognizers: Set()..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
+
+          // gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+          //   Factory<OneSequenceGestureRecognizer>(
+          //     () => ScaleGestureRecognizer(),
+          //         // () => HorizontalDragGestureRecognizer(),
+          //   ),
+          // ].toSet(),
           onMapCreated: _controller.complete,
           markers: markers),
     );
   }
 
   _openGoogleMap(String address, double lat, double lng) async {
-    var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
-    if (await canLaunch(uri.toString())) {
-      await launch(uri.toString());
-    } else {
+    // var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
+    // if (await canLaunch(uri.toString())) {
+    //   await launch(uri.toString());
+    // } else {
       var zoom = 16;
-      final Uri mapLaunchUri = Uri(
-        scheme: 'https',
-        path: 'www.google.com.hk/maps/search/$address/@$lat,$lng,${zoom}z',
-      );
-      await launch(mapLaunchUri.toString());
-    }
+    //   final Uri mapLaunchUri = Uri(
+    //     scheme: 'https',
+    //     path: 'www.google.com.hk/maps/search/$address/@$lat,$lng,${zoom}z',
+    //   );
+    //   await launch(mapLaunchUri.toString());
+    // }
+    final Uri mapLaunchUri = Uri(
+      scheme: 'https',
+      path: 'www.google.com.hk/maps/search/$address/@$lat,$lng,${zoom}z',
+    );
+    await launch(mapLaunchUri.toString());
   }
 }
 

@@ -1,11 +1,13 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vaccine_hk/app/cubit.dart';
+import 'package:vaccine_hk/app/state.dart';
 import 'package:vaccine_hk/centerDetails/page.dart';
 import 'package:vaccine_hk/extensions.dart';
 import 'package:vaccine_hk/home/cubit.dart';
@@ -13,164 +15,139 @@ import 'package:vaccine_hk/home/state.dart';
 import 'package:vaccine_hk/home/viewModel.dart';
 import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
 import 'package:vaccine_hk/map/view/map_view.dart';
+import 'package:vaccine_hk/stringRes.dart';
 
 class HomeView extends StatelessWidget {
   HomeView();
 
-  void handleClick(String value) {
-    switch (value) {
-      case 'Logout':
-        break;
-      case 'Settings':
-        break;
-    }
-  }
-
-  BannerAd ad = BannerAd(
-    adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-    size: AdSize.banner,
-    request: AdRequest(),
-    listener: AdListener(),
-  );
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
-      Fluttertoast.showToast(
-          msg: "已切換至${state.selectedVaccine!.vaccine}疫苗",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.teal[600],
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
+    return BlocBuilder<AppCubit, AppState>(builder: (context, appState) {
+      return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
+        Fluttertoast.showToast(
+            msg: "已切換至${state.selectedVaccine!.vaccine}疫苗",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.teal[600],
+            textColor: Colors.white,
+            fontSize: 16.0);
 
-      if (state.version > 0) {
-        print("version: ${state.version}");
-        return DefaultTabController(
-          length: state.allDates.length,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('安心打疫苗'),
-              actions: [
-                IconButton(
-                    icon: Icon(Icons.merge_type),
-                    onPressed: () {
-                      context.read<HomeCubit>().switchVaccine();
-                    }),
-                IconButton(
-                    icon: Icon(Icons.refresh),
-                    onPressed: () {
-                      context.read<HomeCubit>().refreshPage();
-                    }),
-                // PopupMenuButton<String>(
-                //   icon: Icon(Icons.settings),
-                //   onSelected: handleClick,
-                //   itemBuilder: (BuildContext context) {
-                //     Set<HomeMenuBottom> menuOptions = {};
-                //     if (state.showAvailableOnly) {
-                //       menuOptions.add(HomeMenuBottom.SHOW_AVAILABLE);
-                //     } else {
-                //       menuOptions.add(HomeMenuBottom.SHOW_ALL);
-                //     }
-                //     return menuOptions.map((HomeMenuBottom choice) {
-                //       if (choice == HomeMenuBottom.SHOW_AVAILABLE) {
-                //         return PopupMenuItem<String>(
-                //           value: "",
-                //           child: Row(
-                //             children: [
-                //               Text("只顯示尚有餘額"),
-                //               Checkbox(value: true, onChanged: (bool) {}),
-                //             ],
-                //           ),
-                //         );
-                //       }
-                //       return PopupMenuItem<String>(
-                //         value: "not impl",
-                //         child: Text("not impl"),
-                //       );
-                //     }).toList();
-                IconButton(
-                    icon: Icon(Icons.notifications),
-                    onPressed: () async {
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      List<String> subscribedCenters = prefs.getStringList("centerNames") ?? [];
-                      await showDialog<void>(
-                        context: context,
-                        barrierDismissible: false, // user must tap button!
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                              title: Text(subscribedCenters.isEmpty
-                                  ? "你目前沒有已訂閱的疫苗中心"
-                                  : "已訂閱${subscribedCenters.length}個疫苗中心"),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: subscribedCenters.map((e) {
-                                    return Text(e.urlDecode());
-                                  }).toList(),
+        if (state.version > 0) {
+          print("version: ${state.version}");
+          return DefaultTabController(
+            length: state.allDates.length,
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('安心打疫苗'),
+                actions: [
+                  // appState.currentTheme == ThemeMode.light
+                  //     ? IconButton(
+                  //         icon: Icon(Icons.nights_stay_rounded),
+                  //         onPressed: () {
+                  //           context.read<AppCubit>().changeTheme(ThemeMode.dark);
+                  //         })
+                  //     : IconButton(
+                  //         icon: Icon(Icons.wb_sunny_rounded),
+                  //         onPressed: () {
+                  //           context.read<AppCubit>().changeTheme(ThemeMode.light);
+                  //         }),
+                  IconButton(
+                      icon: Icon(Icons.merge_type),
+                      onPressed: () {
+                        context.read<HomeCubit>().switchVaccine();
+                      }),
+                  IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () {
+                        context.read<HomeCubit>().refreshPage();
+                      }),
+                  IconButton(
+                      icon: Icon(Icons.notifications),
+                      onPressed: () async {
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        List<String> subscribedCenters = prefs.getStringList("centerNames") ?? [];
+                        await showDialog<void>(
+                          context: context,
+                          barrierDismissible: false, // user must tap button!
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                                title: Text(subscribedCenters.isEmpty
+                                    ? "你目前沒有已訂閱的疫苗中心"
+                                    : "已訂閱${subscribedCenters.length}個疫苗中心"),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: subscribedCenters.map((e) {
+                                      return Text(e.urlDecode());
+                                    }).toList(),
+                                  ),
                                 ),
-                              ),
-                              actions: subscribedCenters.isEmpty ? [
-                                TextButton(
-                                  child: Text('確認'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ] : [
-                                TextButton(
-                                  child: Text('清除全部'),
-                                  onPressed: () async {
-                                    // await FirebaseMessaging.instance.deleteToken();
-                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    prefs.remove("centerNames");
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                TextButton(
-                                  child: Text('確認'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ]
-                          );
-                        },
-                      );
-                    }),
-              ],
-              bottom: TabBar(
-                indicator: UnderlineTabIndicator(
-                  borderSide:
-                  BorderSide(color: Colors.white, width: 4.0),
+                                actions: subscribedCenters.isEmpty
+                                    ? [
+                                        TextButton(
+                                          child: Text('確認'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ]
+                                    : [
+                                        TextButton(
+                                          child: Text('清除全部'),
+                                          onPressed: () async {
+                                            // await FirebaseMessaging.instance.deleteToken();
+                                            SharedPreferences prefs =
+                                                await SharedPreferences.getInstance();
+                                            prefs.remove("centerNames");
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('確認'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ]);
+                          },
+                        );
+                      }),
+                ],
+                bottom: TabBar(
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(color: Colors.white, width: 4.0),
+                  ),
+                  isScrollable: true,
+                  tabs: state.allDates.map((e) {
+                    return Tab(
+                      child: Column(
+                        children: [
+                          Text(e.toHumanFriendly(), style: TextStyle(fontSize: 15)),
+                          Text(e.toWeekDay(), style: TextStyle(fontSize: 14)),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
-                isScrollable: true,
-                tabs: state.allDates.map((e) {
-                  return Tab(
-                    child: Column(
-                      children: [
-                        Text(e.toHumanFriendly(), style: TextStyle(fontSize: 15)),
-                        Text(e.toWeekDay(), style: TextStyle(fontSize: 14)),
-                      ],
-                    ),
-                  );
-                }).toList(),
+              ),
+              body: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
+                children: state.allPages
+                    .map((e) => TabChildPage(state.selectedVaccine!.vaccine, e.regions))
+                    .toList(),
+              ),
+              bottomNavigationBar: Container(
+                child: AdmobBanner(
+                  adUnitId: AdUnits.HOME_BOTTOM_BANNER,
+                  adSize: AdmobBannerSize.BANNER,
+                ),
               ),
             ),
-            body: TabBarView(
-              physics: NeverScrollableScrollPhysics(),
-              children: state.allPages.map((e) =>
-                  TabChildPage(state.selectedVaccine!.vaccine, e.regions)).toList(),
-            ),
-            bottomNavigationBar: Container(
-              child: AdWidget(ad: ad..load()),
-            ),
-          ),
-        );
-      } else {
-        throw Exception();
-      }
+          );
+        } else {
+          throw Exception();
+        }
+      });
     });
   }
 }
@@ -187,18 +164,31 @@ class TabChildPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String lastUpdateAtDisplay = DateFormat("dd-MM-yyyy hh:mm:ss a").format(DateTime.now());
     Map<int, Widget> prependItems = Map.fromEntries([
-      MapEntry(0, SizedBox(
-        height: 250,
-        child: MapView(),
-      )),
-      MapEntry(1, Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text("最後更新: $lastUpdateAtDisplay", style: TextStyle(color: Colors.grey[600])),
-      )),
-      MapEntry(2, Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text("目前顯示疫苗種類: $currentVaccine", style: TextStyle(color: Colors.grey[600])),
-      )),
+      MapEntry(
+          0,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("你可以從下面的地圖中，尋找最近你的診所或醫院，並預約接受疫苗注射；\n亦可以從下面列表點擊進入詳細頁。",
+                style: TextStyle(color: Colors.grey[600])),
+          )),
+      MapEntry(
+          1,
+          SizedBox(
+            height: 250,
+            child: MapView(),
+          )),
+      MapEntry(
+          2,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("最後更新: $lastUpdateAtDisplay", style: TextStyle(color: Colors.grey[600])),
+          )),
+      MapEntry(
+          3,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("目前顯示疫苗種類: $currentVaccine", style: TextStyle(color: Colors.grey[600])),
+          )),
     ]);
     return new ListView.builder(
       itemCount: regions.length + prependItems.length,

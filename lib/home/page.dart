@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaccine_hk/app/cubit.dart';
 import 'package:vaccine_hk/home/cubit.dart';
 import 'package:vaccine_hk/home/view.dart';
 import 'package:vaccine_hk/home/viewModel.dart';
@@ -11,19 +12,21 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => HomeCubit(),
-      child: FutureBuilder(
-        future: HomeCubit().getVaccineModels(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // print(snapshot.data)
-            context.read<HomeCubit>().setAllVaccines(snapshot.data as Set<VaccineModel>);
-            return HomeView();
-          } else if (snapshot.hasError) {
-            return Center(child: Text("${snapshot.error}"));
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
+        child: BlocProvider(
+          create: (_) => AppCubit(),
+          child: FutureBuilder(
+            future: HomeCubit().getVaccineModels(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                // print(snapshot.data)
+                context.read<HomeCubit>().setAllVaccines(snapshot.data as Set<VaccineModel>);
+                return HomeView();
+              } else if (snapshot.hasError) {
+                return Center(child: Text("${snapshot.error}"));
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          ),
+        ));
   }
 }
