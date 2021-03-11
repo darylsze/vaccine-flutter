@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vaccine_hk/centerDetails/page.dart';
@@ -26,6 +26,13 @@ class HomeView extends StatelessWidget {
     }
   }
 
+  BannerAd ad = BannerAd(
+    adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+    size: AdSize.banner,
+    request: AdRequest(),
+    listener: AdListener(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
@@ -47,41 +54,43 @@ class HomeView extends StatelessWidget {
             appBar: AppBar(
               title: const Text('安心打疫苗'),
               actions: [
-                IconButton(icon: Icon(Icons.merge_type), onPressed: () {
-                  context.read<HomeCubit>().switchVaccine();
-                }),
-                IconButton(icon: Icon(Icons.refresh), onPressed: () {
-                  context.read<HomeCubit>().refreshPage();
-                }),
-                PopupMenuButton<String>(
-                  icon: Icon(Icons.settings),
-                  onSelected: handleClick,
-                  itemBuilder: (BuildContext context) {
-                    Set<HomeMenuBottom> menuOptions = {};
-                    if (state.showAvailableOnly) {
-                      menuOptions.add(HomeMenuBottom.SHOW_AVAILABLE);
-                    } else {
-                      menuOptions.add(HomeMenuBottom.SHOW_ALL);
-                    }
-                    return menuOptions.map((HomeMenuBottom choice) {
-                      if (choice == HomeMenuBottom.SHOW_AVAILABLE) {
-                        return PopupMenuItem<String>(
-                          value: "",
-                          child: Row(
-                            children: [
-                              Text("只顯示尚有餘額"),
-                              Checkbox(value: true, onChanged: (bool) {}),
-                            ],
-                          ),
-                        );
-                      }
-                      return PopupMenuItem<String>(
-                        value: "not impl",
-                        child: Text("not impl"),
-                      );
-                    }).toList();
-                  },
-                ),
+                IconButton(
+                    icon: Icon(Icons.merge_type),
+                    onPressed: () {
+                      context.read<HomeCubit>().switchVaccine();
+                    }),
+                IconButton(
+                    icon: Icon(Icons.refresh),
+                    onPressed: () {
+                      context.read<HomeCubit>().refreshPage();
+                    }),
+                // PopupMenuButton<String>(
+                //   icon: Icon(Icons.settings),
+                //   onSelected: handleClick,
+                //   itemBuilder: (BuildContext context) {
+                //     Set<HomeMenuBottom> menuOptions = {};
+                //     if (state.showAvailableOnly) {
+                //       menuOptions.add(HomeMenuBottom.SHOW_AVAILABLE);
+                //     } else {
+                //       menuOptions.add(HomeMenuBottom.SHOW_ALL);
+                //     }
+                //     return menuOptions.map((HomeMenuBottom choice) {
+                //       if (choice == HomeMenuBottom.SHOW_AVAILABLE) {
+                //         return PopupMenuItem<String>(
+                //           value: "",
+                //           child: Row(
+                //             children: [
+                //               Text("只顯示尚有餘額"),
+                //               Checkbox(value: true, onChanged: (bool) {}),
+                //             ],
+                //           ),
+                //         );
+                //       }
+                //       return PopupMenuItem<String>(
+                //         value: "not impl",
+                //         child: Text("not impl"),
+                //       );
+                //     }).toList();
                 IconButton(
                     icon: Icon(Icons.notifications),
                     onPressed: () async {
@@ -92,40 +101,40 @@ class HomeView extends StatelessWidget {
                         barrierDismissible: false, // user must tap button!
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text(subscribedCenters.isEmpty
-                                ? "你目前沒有已訂閱的疫苗中心"
-                                : "已訂閱${subscribedCenters.length}個疫苗中心"),
-                            content: SingleChildScrollView(
-                              child: ListBody(
-                                children: subscribedCenters.map((e) {
-                                  return Text(e.urlDecode());
-                                }).toList(),
+                              title: Text(subscribedCenters.isEmpty
+                                  ? "你目前沒有已訂閱的疫苗中心"
+                                  : "已訂閱${subscribedCenters.length}個疫苗中心"),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: subscribedCenters.map((e) {
+                                    return Text(e.urlDecode());
+                                  }).toList(),
+                                ),
                               ),
-                            ),
-                            actions: subscribedCenters.isEmpty ? [
+                              actions: subscribedCenters.isEmpty ? [
                                 TextButton(
                                   child: Text('確認'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
-                            ] : [
-                              TextButton(
-                                child: Text('清除全部'),
-                                onPressed: () async {
-                                  // await FirebaseMessaging.instance.deleteToken();
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  prefs.remove("centerNames");
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: Text('確認'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ]
+                              ] : [
+                                TextButton(
+                                  child: Text('清除全部'),
+                                  onPressed: () async {
+                                    // await FirebaseMessaging.instance.deleteToken();
+                                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    prefs.remove("centerNames");
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text('確認'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ]
                           );
                         },
                       );
@@ -151,7 +160,11 @@ class HomeView extends StatelessWidget {
             ),
             body: TabBarView(
               physics: NeverScrollableScrollPhysics(),
-              children: state.allPages.map((e) => TabChildPage(state.selectedVaccine!.vaccine, e.regions)).toList(),
+              children: state.allPages.map((e) =>
+                  TabChildPage(state.selectedVaccine!.vaccine, e.regions)).toList(),
+            ),
+            bottomNavigationBar: Container(
+              child: AdWidget(ad: ad..load()),
             ),
           ),
         );
@@ -287,10 +300,10 @@ class CenterRow extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: AutoSizeText(centerForDate.center.cName,
-                            style: TextStyle(fontSize: 18),
-                            minFontSize: 16,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis),
+                              style: TextStyle(fontSize: 18),
+                              minFontSize: 16,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
                         ),
                       ],
                     ),
