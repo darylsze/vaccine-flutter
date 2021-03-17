@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vaccine_hk/SliverAppBarDelegate.dart';
 import 'package:vaccine_hk/app/cubit.dart';
 import 'package:vaccine_hk/app/state.dart';
 import 'package:vaccine_hk/centerDetails/page.dart';
@@ -15,30 +16,6 @@ import 'package:vaccine_hk/home/state.dart';
 import 'package:vaccine_hk/home/viewModel.dart';
 import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
 import 'package:vaccine_hk/map/view/map_view.dart';
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
-      child: _tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
-}
 
 class HomeView extends StatelessWidget {
   HomeView();
@@ -68,78 +45,39 @@ class HomeView extends StatelessWidget {
                         expandedHeight: 270.0,
                         floating: false,
                         pinned: true,
+                        automaticallyImplyLeading: false,
+                        actions: [
+                          IconButton(
+                              icon: Icon(Icons.merge_type),
+                              onPressed: () {
+                                context.read<HomeCubit>().switchVaccine();
+                              }),
+                          IconButton(
+                              icon: Icon(Icons.refresh),
+                              onPressed: () {
+                                context.read<HomeCubit>().refreshPage();
+                              }),
+                          IconButton(
+                              icon: Icon(Icons.notifications),
+                              onPressed: () async {
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                List<String> subscribedCenters =
+                                    prefs.getStringList("centerNames") ?? [];
+                                await showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false, // user must tap button!
+                                  builder: (BuildContext context) {
+                                    return renderSubscriptionDetailsDialog(context, subscribedCenters);
+                                  },
+                                );
+                              }),
+                        ],
+                        title: Text("安心打疫苗"),
                         flexibleSpace: FlexibleSpaceBar(
-                          title: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text("安心打疫苗"),
-                              IconButton(
-                                  icon: Icon(Icons.merge_type),
-                                  onPressed: () {
-                                    context.read<HomeCubit>().switchVaccine();
-                                  }),
-                              IconButton(
-                                  icon: Icon(Icons.refresh),
-                                  onPressed: () {
-                                    context.read<HomeCubit>().refreshPage();
-                                  }),
-                              IconButton(
-                                  icon: Icon(Icons.notifications),
-                                  onPressed: () async {
-                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    List<String> subscribedCenters =
-                                        prefs.getStringList("centerNames") ?? [];
-                                    await showDialog<void>(
-                                      context: context,
-                                      barrierDismissible: false, // user must tap button!
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                            title: Text(subscribedCenters.isEmpty
-                                                ? "你目前沒有已訂閱的疫苗中心"
-                                                : "已訂閱${subscribedCenters.length}個疫苗中心"),
-                                            content: SingleChildScrollView(
-                                              child: ListBody(
-                                                children: subscribedCenters.map((e) {
-                                                  return Text(e.urlDecode());
-                                                }).toList(),
-                                              ),
-                                            ),
-                                            actions: subscribedCenters.isEmpty
-                                                ? [
-                                              TextButton(
-                                                child: Text('確認'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ]
-                                                : [
-                                              TextButton(
-                                                child: Text('清除全部'),
-                                                onPressed: () async {
-                                                  // await FirebaseMessaging.instance.deleteToken();
-                                                  SharedPreferences prefs =
-                                                  await SharedPreferences.getInstance();
-                                                  prefs.remove("centerNames");
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: Text('確認'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ]);
-                                      },
-                                    );
-                                  }),
-                            ],
-                          ),
                           background: MapView(),
                         )),
                     SliverPersistentHeader(
-                      delegate: _SliverAppBarDelegate(
+                      delegate: SliverAppBarDelegate(
                         TabBar(
                           indicator: UnderlineTabIndicator(
                             borderSide: BorderSide(color: Colors.white, width: 4.0),
@@ -147,11 +85,13 @@ class HomeView extends StatelessWidget {
                           isScrollable: true,
                           tabs: state.allDates.map((e) {
                             return Tab(
-                              child: Column(
-                                children: [
-                                  Text(e.toHumanFriendly(), style: TextStyle(fontSize: 15)),
-                                  Text(e.toWeekDay(), style: TextStyle(fontSize: 14)),
-                                ],
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    Text(e.toHumanFriendly(), style: TextStyle(fontSize: 15)),
+                                    Text(e.toWeekDay(), style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
                               ),
                             );
                           }).toList(),
@@ -181,6 +121,47 @@ class HomeView extends StatelessWidget {
       });
     });
   }
+
+  Widget renderSubscriptionDetailsDialog(BuildContext context, List<String> subscribedCenters) {
+    return AlertDialog(
+        title: Text(subscribedCenters.isEmpty
+            ? "你目前沒有已訂閱的疫苗中心"
+            : "已訂閱${subscribedCenters.length}個疫苗中心"),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: subscribedCenters.map((e) {
+              return Text(e.urlDecode());
+            }).toList(),
+          ),
+        ),
+        actions: subscribedCenters.isEmpty
+            ? [
+          TextButton(
+            child: Text('確認'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ]
+            : [
+          TextButton(
+            child: Text('清除全部'),
+            onPressed: () async {
+              // await FirebaseMessaging.instance.deleteToken();
+              SharedPreferences prefs =
+              await SharedPreferences.getInstance();
+              prefs.remove("centerNames");
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('確認'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ]);
+  }
 }
 
 class TabChildPage extends StatelessWidget {
@@ -194,39 +175,27 @@ class TabChildPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String lastUpdateAtDisplay = DateFormat("dd-MM-yyyy hh:mm:ss a").format(DateTime.now());
-    Map<int, Widget> prependItems = Map.fromEntries([
-      MapEntry(
-          0,
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("你可以從下面的地圖中，尋找最近你的診所或醫院，並預約接受疫苗注射；\n亦可以從下面列表點擊進入詳細頁。",
-                style: TextStyle(color: Colors.grey[600])),
-          )),
-      // MapEntry(
-      //     1,
-      //     SizedBox(
-      //       height: 250,
-      //       child: MapView(),
-      //     )),
-      MapEntry(
-          1,
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("最後更新: $lastUpdateAtDisplay", style: TextStyle(color: Colors.grey[600])),
-          )),
-      MapEntry(
-          2,
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("目前顯示疫苗種類: $currentVaccine", style: TextStyle(color: Colors.grey[600])),
-          )),
+    var prependItems = List<Widget>.from([
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("你可以從上面的地圖中，尋找最近你的診所或醫院，並預約接受疫苗注射；亦可以從下面列表點擊進入詳細頁。",
+            style: TextStyle(color: Colors.grey[600])),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("最後更新: $lastUpdateAtDisplay", style: TextStyle(color: Colors.grey[600])),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("目前顯示疫苗種類: $currentVaccine", style: TextStyle(color: Colors.grey[600])),
+      )
     ]);
-    return new ListView.builder(
+    return ListView.builder(
       itemCount: regions.length + prependItems.length,
       itemBuilder: (BuildContext context, int index) {
-        bool shouldShowExtraItem = prependItems.entries.any((element) => element.key == index);
+        bool shouldShowExtraItem = index < prependItems.length;
         if (shouldShowExtraItem) {
-          return prependItems.entries.toList()[index].value;
+          return prependItems[index];
         } else {
           return RegionCell(regions.elementAt(index - prependItems.length));
         }
