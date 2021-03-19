@@ -42,7 +42,9 @@ class HomeCubit extends Cubit<HomeState> {
 
 extension VaccineExtensions on List<VaccineModel> {
   VaccineModel next({ required VaccineModel current }) {
-    List<VaccineModel> differences = this.where((element) => element.vaccine != current.vaccine).toList() ?? [];
+    List<VaccineModel> differences = this
+        .where((element) => current.vaccine != element.vaccine)
+        .toList() ?? [];
     differences.sort();
     return differences.first;
   }
