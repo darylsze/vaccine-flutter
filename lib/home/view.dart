@@ -1,4 +1,5 @@
 // import 'package:admob_flutter/admob_flutter.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,12 @@ import 'package:vaccine_hk/app/state.dart';
 import 'package:vaccine_hk/centerDetails/page.dart';
 import 'package:vaccine_hk/extensions.dart';
 import 'package:vaccine_hk/home/cubit.dart';
+import 'package:vaccine_hk/home/drawer_view.dart';
 import 'package:vaccine_hk/home/state.dart';
 import 'package:vaccine_hk/home/viewModel.dart';
 import 'package:vaccine_hk/map/entity/ReserveStatus.dart';
 import 'package:vaccine_hk/map/view/map_view.dart';
+import 'package:vaccine_hk/stringRes.dart';
 
 class HomeView extends StatelessWidget {
   HomeView();
@@ -29,7 +32,7 @@ class HomeView extends StatelessWidget {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 2,
-            backgroundColor: Colors.teal[600],
+            backgroundColor: Theme.of(context).primaryColor,
             textColor: Colors.white,
             fontSize: 16.0);
 
@@ -38,6 +41,7 @@ class HomeView extends StatelessWidget {
           return DefaultTabController(
             length: state.allDates.length,
             child: Scaffold(
+              drawer: MyDrawer(),
               body: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
@@ -45,7 +49,6 @@ class HomeView extends StatelessWidget {
                         expandedHeight: 270.0,
                         floating: false,
                         pinned: true,
-                        automaticallyImplyLeading: false,
                         actions: [
                           IconButton(
                               icon: Icon(Icons.merge_type),
@@ -108,11 +111,10 @@ class HomeView extends StatelessWidget {
                       .toList(),
                 ),
               ),
-              bottomNavigationBar: Container(child: Text("") //AdmobBanner(
-                  //   adUnitId: AdUnits.HOME_BOTTOM_BANNER,
-                  //   adSize: AdmobBannerSize.BANNER,
-                  // ),
-                  ),
+              bottomNavigationBar: AdmobBanner(
+                adUnitId: AdUnits.HOME_BOTTOM_BANNER,
+                adSize: AdmobBannerSize.BANNER,
+              ),
             ),
           );
         } else {
@@ -176,11 +178,6 @@ class TabChildPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String lastUpdateAtDisplay = DateFormat("dd-MM-yyyy hh:mm:ss a").format(DateTime.now());
     var prependItems = List<Widget>.from([
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text("你可以從上面的地圖中，尋找最近你的診所或醫院，並預約接受疫苗注射；亦可以從下面列表點擊進入詳細頁。",
-            style: TextStyle(color: Colors.grey[600])),
-      ),
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text("最後更新: $lastUpdateAtDisplay", style: TextStyle(color: Colors.grey[600])),

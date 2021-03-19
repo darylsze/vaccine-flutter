@@ -20,6 +20,11 @@ class HomePage extends StatelessWidget {
               if (snapshot.hasData) {
                 // print(snapshot.data)
                 context.read<HomeCubit>().setAllVaccines(snapshot.data as Set<VaccineModel>);
+                // return Scaffold(
+                //   appBar: AppBar(title: Text("abncd")),
+                //   drawer: Drawer(),
+                //   body: HomeView(),
+                // );
                 return HomeView();
               } else if (snapshot.hasError) {
                 return Center(child: Text("${snapshot.error}"));
