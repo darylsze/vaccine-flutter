@@ -32,6 +32,7 @@ class Application extends StatelessWidget {
                   ),
                   darkTheme: ThemeData(
                     brightness: Brightness.dark,
+                    primaryColor: Colors.black54
                     // additional settings go here
                   ),
                   initialRoute: '/',
