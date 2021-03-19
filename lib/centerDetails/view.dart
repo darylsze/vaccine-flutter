@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vaccine_hk/AdmobManager.dart';
 import 'package:vaccine_hk/stringRes.dart';
 
 import 'cubit.dart';
@@ -120,18 +120,16 @@ class CenterDetailView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(margin: EdgeInsets.all(8),
-                    child: FcmNotificationButton(center: center,)),
+                Container(
+                    margin: EdgeInsets.all(8),
+                    child: FcmNotificationButton(
+                      center: center,
+                    )),
               ],
             ),
           ),
         ),
-        bottomNavigationBar: Container(
-          child: AdmobBanner(
-            adUnitId: AdUnits.CENTER_DETAILS_BOTTOM_BANNER,
-            adSize: AdmobBannerSize.BANNER,
-          ),
-        ),
+        bottomNavigationBar: AdmobManager().getBanner(AdUnits.CENTER_DETAILS_BOTTOM_BANNER),
       );
     });
   }

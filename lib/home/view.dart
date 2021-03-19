@@ -1,12 +1,14 @@
 // import 'package:admob_flutter/admob_flutter.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vaccine_hk/AdmobManager.dart';
 import 'package:vaccine_hk/SliverAppBarDelegate.dart';
 import 'package:vaccine_hk/app/cubit.dart';
 import 'package:vaccine_hk/app/state.dart';
@@ -111,10 +113,7 @@ class HomeView extends StatelessWidget {
                       .toList(),
                 ),
               ),
-              bottomNavigationBar: AdmobBanner(
-                adUnitId: AdUnits.HOME_BOTTOM_BANNER,
-                adSize: AdmobBannerSize.BANNER,
-              ),
+              bottomNavigationBar: AdmobManager().getBanner(AdUnits.HOME_BOTTOM_BANNER),
             ),
           );
         } else {
