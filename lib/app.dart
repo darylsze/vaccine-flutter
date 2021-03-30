@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaccine_hk/app/state.dart';
-import 'package:vaccine_hk/centerDetails/page.dart';
+import 'package:vaccine_hk/presentation/app/state.dart';
+import 'package:vaccine_hk/presentation/centerDetails/page.dart';
+import 'package:vaccine_hk/presentation/home/view.dart';
 
-import 'app/cubit.dart';
-import 'home/page.dart';
+import 'cubit/index.dart';
 
 class ApplicationWrapper extends StatelessWidget {
   @override
