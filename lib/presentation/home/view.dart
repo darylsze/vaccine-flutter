@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vaccine_hk/presentation/articles/article_page.dart';
 import 'package:vaccine_hk/presentation/centerList/page.dart';
+import 'package:vaccine_hk/widgets/index.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,17 +19,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // fixme ordering
   final List<Widget> _widgetOptions = <Widget>[
+    ArticlePage(),
     CenterList(),
-    ArticlePage()
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      drawer: MyDrawer(),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

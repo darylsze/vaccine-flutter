@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vaccine_hk/AdmobManager.dart';
 import 'package:vaccine_hk/presentation/app/state.dart';
 import 'package:vaccine_hk/presentation/centerDetails/page.dart';
-import 'package:vaccine_hk/presentation/centerList/drawer_view.dart';
 import 'package:vaccine_hk/presentation/centerList/state.dart';
 import 'package:vaccine_hk/cubit/index.dart';
 import 'package:vaccine_hk/extensions.dart';

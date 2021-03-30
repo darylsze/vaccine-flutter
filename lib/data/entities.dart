@@ -2,10 +2,33 @@ import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'entities.g.dart';
+
+enum PostTag { TRENDING }
+
+abstract class IPost {}
+
+class PostRow extends IPost {
+  String title;
+  String imgUrl;
+  DateTime createdAt;
+  List<PostTag> tags;
+
+  PostRow(this.title, this.imgUrl, this.createdAt, this.tags);
+}
+
+class PostBanner extends IPost {
+  String title;
+  String imgUrl;
+  DateTime createdAt;
+  List<PostTag> tags;
+
+  PostBanner(this.title, this.imgUrl, this.createdAt, this.tags);
+}
 
 @JsonSerializable()
 class CenterInfo extends Equatable {
