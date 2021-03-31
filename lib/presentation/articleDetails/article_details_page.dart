@@ -55,7 +55,10 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text("Sept 26, 2019   |   15:15 PM"),
+                        Text(
+                          "Sept 26, 2019   |   15:15 PM",
+                          style: TextStyle(color: Colors.white),
+                        ),
                         SizedBox(height: 10),
                         Text(
                           post.title,
@@ -63,10 +66,11 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             height: 1.4,
+                            color: Colors.white,
                           ),
                         ),
                         SizedBox(height: 10),
-                        ...post.tags.map((e) => Text(e.toString())).toList()
+                        ...post.tags.map((e) => Text(e.toString(), style: TextStyle(color: Colors.white),)).toList()
                       ],
                     ),
                   ),

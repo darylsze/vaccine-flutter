@@ -37,6 +37,9 @@ class Application extends StatelessWidget {
                     // additional settings go here
                   ),
                   initialRoute: '/',
+                  navigatorObservers: [
+                    HeroController(),
+                  ],
                   routes: {
                     // '/': (context) => ArticleDetailsPage()
                     '/': (context) => HomePage(),
