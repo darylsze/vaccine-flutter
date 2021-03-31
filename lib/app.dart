@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaccine_hk/presentation/app/state.dart';
+import 'package:vaccine_hk/presentation/articleDetails/article_details_page.dart';
 import 'package:vaccine_hk/presentation/centerDetails/page.dart';
 import 'package:vaccine_hk/presentation/home/view.dart';
 
@@ -37,8 +38,10 @@ class Application extends StatelessWidget {
                   ),
                   initialRoute: '/',
                   routes: {
-                    '/': (context) => HomePage(),
-                    CenterDetailsPage.routeName: (context) => CenterDetailsPage()
+                    '/': (context) => ArticleDetailsPage()
+                        // HomePage(),
+                    // CenterDetailsPage.routeName: (context) => CenterDetailsPage(),
+                    // ArticleDetailsPage.routeName: (context) => ArticleDetailsPage()
                   });
             }
             return CircularProgressIndicator();

@@ -10,24 +10,21 @@ part 'entities.g.dart';
 
 enum PostTag { TRENDING }
 
-abstract class IPost {}
-
-class PostRow extends IPost {
+abstract class IPost {
   String title;
   String imgUrl;
   DateTime createdAt;
   List<PostTag> tags;
 
-  PostRow(this.title, this.imgUrl, this.createdAt, this.tags);
+  IPost(this.title, this.imgUrl, this.createdAt, this.tags);
+}
+
+class PostRow extends IPost {
+  PostRow(String title, String imgUrl, DateTime createdAt, List<PostTag> tags) : super(title, imgUrl, createdAt, tags);
 }
 
 class PostBanner extends IPost {
-  String title;
-  String imgUrl;
-  DateTime createdAt;
-  List<PostTag> tags;
-
-  PostBanner(this.title, this.imgUrl, this.createdAt, this.tags);
+  PostBanner(String title, String imgUrl, DateTime createdAt, List<PostTag> tags) : super(title, imgUrl, createdAt, tags);
 }
 
 @JsonSerializable()

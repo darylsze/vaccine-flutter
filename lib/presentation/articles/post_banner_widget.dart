@@ -11,14 +11,9 @@ class PostBannerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(
-            "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
-          ),
-          fit: BoxFit.fill
-        ),
+        image: DecorationImage(image: NetworkImage(item.imgUrl), fit: BoxFit.fill),
       ),
-      height: MediaQuery.of(context).size.height * 0.5,
+      height: MediaQuery.of(context).size.height * 0.6,
       child: Container(
         padding: EdgeInsets.all(15),
         child: Column(
@@ -35,7 +30,10 @@ class PostBannerWidget extends StatelessWidget {
                         ),
                         child: Text(
                           e.toString(),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
                         ),
                       ))
                   .toList(),
@@ -58,8 +56,14 @@ class PostBannerWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("22 hours ago"),
-                Icon(Icons.ios_share),
+                Text(
+                  "22 hours ago",
+                  style: TextStyle(color: Colors.grey[200]),
+                ),
+                Icon(
+                  Icons.ios_share,
+                  color: Colors.grey[200],
+                ),
               ],
             ),
           ],
