@@ -11,13 +11,13 @@ class ArticlePage extends StatelessWidget {
         "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
         DateTime.now(),
         [PostTag.TRENDING]),
-    PostRow("Google Semantic Experience let you play word games with its AI", "imgUrl",
+    PostRow("Google Semantic Experience let you play word games with its AI", "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
         DateTime.now(), []),
-    PostRow("Google Semantic Experience let you play word games with its AI", "imgUrl",
+    PostRow("Google Semantic Experience let you play word games with its AI", "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
         DateTime.now(), []),
-    PostRow("Google Semantic Experience let you play word games with its AI", "imgUrl",
+    PostRow("Google Semantic Experience let you play word games with its AI", "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
         DateTime.now(), []),
-    PostRow("Google Semantic Experience let you play word games with its AI", "imgUrl",
+    PostRow("Google Semantic Experience let you play word games with its AI", "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
         DateTime.now(), []),
     PostBanner(
         "In the Swiss Alps, Walking a Cliff's Edge to History",
@@ -27,8 +27,8 @@ class ArticlePage extends StatelessWidget {
     // todo add some ads (native?, or just banner)
     PostRow("Google Semantic Experience let you play word games with its AI", "imgUrl",
         DateTime.now(), []),
-    PostRow("abcd", "imgUrl", DateTime.now(), []),
-    PostRow("abcd", "imgUrl", DateTime.now(), []),
+    PostRow("abcd", "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80", DateTime.now(), []),
+    PostRow("abcd", "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80", DateTime.now(), []),
   ];
 
   @override

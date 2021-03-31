@@ -9,64 +9,70 @@ class PostBannerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(image: NetworkImage(item.imgUrl), fit: BoxFit.fill),
-      ),
-      height: MediaQuery.of(context).size.height * 0.6,
+    return Hero(
+      tag: "image_banner",
       child: Container(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: item.tags
-                  .map((e) => Container(
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        child: Text(
-                          e.toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(item.imgUrl),
+            fit: BoxFit.fill,
+          ),
+        ),
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: Container(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: item.tags
+                    .map((e) => Container(
+                          padding: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow,
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                           ),
-                        ),
-                      ))
-                  .toList(),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              item.title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
+                          child: Text(
+                            e.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ))
+                    .toList(),
               ),
-              maxLines: 3,
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "22 hours ago",
-                  style: TextStyle(color: Colors.grey[200]),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                item.title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
                 ),
-                Icon(
-                  Icons.ios_share,
-                  color: Colors.grey[200],
-                ),
-              ],
-            ),
-          ],
+                maxLines: 3,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "22 hours ago",
+                    style: TextStyle(color: Colors.grey[200]),
+                  ),
+                  Icon(
+                    Icons.ios_share,
+                    color: Colors.grey[200],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -12,10 +12,18 @@ class PostRowWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: Row(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.2,
-            height: MediaQuery.of(context).size.width * 0.2,
-            decoration: BoxDecoration(color: Colors.red),
+          Hero(
+            tag: "image_banner",
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.2,
+              height: MediaQuery.of(context).size.width * 0.2,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(item.imgUrl),
+                ),
+              ),
+            ),
           ),
           Expanded(
             child: ListTile(

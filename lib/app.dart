@@ -38,10 +38,10 @@ class Application extends StatelessWidget {
                   ),
                   initialRoute: '/',
                   routes: {
-                    '/': (context) => ArticleDetailsPage()
-                        // HomePage(),
-                    // CenterDetailsPage.routeName: (context) => CenterDetailsPage(),
-                    // ArticleDetailsPage.routeName: (context) => ArticleDetailsPage()
+                    // '/': (context) => ArticleDetailsPage()
+                    '/': (context) => HomePage(),
+                    CenterDetailsPage.routeName: (context) => CenterDetailsPage(),
+                    ArticleDetailsPage.routeName: (context) => ArticleDetailsPage()
                   });
             }
             return CircularProgressIndicator();

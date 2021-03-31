@@ -20,16 +20,16 @@ class ArticleDetailsPage extends StatefulWidget {
 class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
   @override
   Widget build(BuildContext context) {
-    // final ArticleDetailsPageArguments args =
-    //     ModalRoute.of(context)!.settings.arguments as ArticleDetailsPageArguments;
-    // print("args: ${args.post}");
-    // IPost post = args.post;
-    IPost post = PostRow(
-      "White house tried to lock down ukraine call records whistle blower says",
-      "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
-      DateTime.now(),
-      [PostTag.TRENDING],
-    );
+    final ArticleDetailsPageArguments args =
+        ModalRoute.of(context)!.settings.arguments as ArticleDetailsPageArguments;
+    print("args: ${args.post}");
+    IPost post = args.post;
+    // IPost post = PostRow(
+    //   "White house tried to lock down ukraine call records whistle blower says",
+    //   "https://images.unsplash.com/photo-1491331606314-1d15535360fa?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFrZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1200&q=80",
+    //   DateTime.now(),
+    //   [PostTag.TRENDING],
+    // );
 
     return Scaffold(
       body: CustomScrollView(
@@ -41,31 +41,34 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
             elevation: 12,
             expandedHeight: MediaQuery.of(context).size.height * 0.6,
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(post.imgUrl),
-                )),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text("Sept 26, 2019   |   15:15 PM"),
-                      SizedBox(height: 10),
-                      Text(
-                        post.title,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          height: 1.4,
+              background: Hero(
+                tag: "image_banner",
+                child: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: NetworkImage(post.imgUrl),
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text("Sept 26, 2019   |   15:15 PM"),
+                        SizedBox(height: 10),
+                        Text(
+                          post.title,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            height: 1.4,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      ...post.tags.map((e) => Text(e.toString())).toList()
-                    ],
+                        SizedBox(height: 10),
+                        ...post.tags.map((e) => Text(e.toString())).toList()
+                      ],
+                    ),
                   ),
                 ),
               ),
