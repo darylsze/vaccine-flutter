@@ -1,15 +1,18 @@
 import 'dart:math';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 import 'package:vaccine_hk/AdmobManager.dart';
 import 'package:vaccine_hk/data/entities.dart';
 import 'package:vaccine_hk/data/remote/remote_article_list.dart';
-import 'package:share/share.dart';
 import 'package:vaccine_hk/stringRes.dart';
+import 'package:vaccine_hk/widgets/error_retry_dialog.dart';
 
 class ArticleDetailsPageArguments {
   final String postId;
@@ -40,11 +43,11 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
             return _buildContent(snapshot.data as PostDetails);
           }
           if (snapshot.hasError) {
-            print(snapshot.error);
-            return Center(child: Text("${snapshot.error}"));
-          }
+              FirebaseCrashlytics.instance.recordError(snapshot.error, StackTrace.current);
+              return ErrorRetryDialogWidget();
+            }
 
-          return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
         },
       )
     );
@@ -89,7 +92,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                       Text(
                         post.title,
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                           height: 1.4,
                           color: Colors.white,
@@ -173,10 +176,13 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                 ),
                 Html(
                   data: post.description,
-                  defaultTextStyle: TextStyle(
-                    height: 1.5,
-                    color: Colors.grey[850],
-                  ),
+                  style: {
+                    "*": Style(
+                      color: Colors.grey[850],
+                      fontSize: FontSize.xLarge,
+                      lineHeight: LineHeight.number(1.5)
+                    )
+                  },
                 )
               ],
             ),

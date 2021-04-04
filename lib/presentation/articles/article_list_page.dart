@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:vaccine_hk/AdmobManager.dart';
@@ -7,6 +8,7 @@ import 'package:vaccine_hk/presentation/articles/post_banner_widget.dart';
 import 'package:vaccine_hk/presentation/articles/post_row_widget.dart';
 import 'package:vaccine_hk/stringRes.dart';
 import 'package:vaccine_hk/viewModel/index.dart';
+import 'package:vaccine_hk/widgets/error_retry_dialog.dart';
 
 class ArticleListPage extends StatelessWidget {
   @override
@@ -39,7 +41,8 @@ class ArticleListPage extends StatelessWidget {
             }
 
             if (snapshot.hasError) {
-              return Center(child: Text("${snapshot.error}"));
+              FirebaseCrashlytics.instance.recordError(snapshot.error, StackTrace.current);
+              return ErrorRetryDialogWidget();
             }
 
             return Center(child: CircularProgressIndicator());

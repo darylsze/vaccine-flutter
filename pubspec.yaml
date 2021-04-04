@@ -31,11 +31,9 @@ dependencies:
   #  google_mobile_ads: ^0.11.0+3
   admob_flutter: 2.0.0-nullsafety.0
   cloud_firestore: ^1.0.1
-  sliding_up_panel: ^1.0.2
   lipsum: ^1.0.1
   timeago: ^3.0.2
-  flutter_local_notifications: ^5.0.0
-  flutter_html: ^0.8.2
+  flutter_html: ^2.0.0-nullsafety.0
   share: ^2.0.1
 
 dependency_overrides:

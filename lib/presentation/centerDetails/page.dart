@@ -1,7 +1,9 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaccine_hk/cubit/index.dart';
 import 'package:vaccine_hk/viewModel/index.dart';
+import 'package:vaccine_hk/widgets/error_retry_dialog.dart';
 
 import 'view.dart';
 
@@ -32,7 +34,8 @@ class CenterDetailsPage extends StatelessWidget {
               print("snapshot.data: ${(snapshot.data as CenterDetailsModel).cName}");
               return CenterDetailView();
             } else if (snapshot.hasError) {
-              return Center(child: Text("${snapshot.error}"));
+              FirebaseCrashlytics.instance.recordError(snapshot.error, StackTrace.current);
+              return ErrorRetryDialogWidget();
             }
             return Center(child: CircularProgressIndicator());
           }),

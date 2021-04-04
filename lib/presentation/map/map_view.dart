@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -9,6 +10,7 @@ import 'package:vaccine_hk/cubit/cubit_map_details.dart';
 import 'package:vaccine_hk/data/entities.dart';
 import 'package:vaccine_hk/repo/repo.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vaccine_hk/widgets/error_retry_dialog.dart';
 
 class MapView extends StatelessWidget {
   final Completer<GoogleMapController> _controller = Completer();
@@ -35,7 +37,8 @@ class MapView extends StatelessWidget {
               }).toSet();
               return _renderMapView(context, markers);
             } else if (snapshot.hasError) {
-              return Center(child: Text("${snapshot.error}"));
+              FirebaseCrashlytics.instance.recordError(snapshot.error, StackTrace.current);
+              return ErrorRetryDialogWidget();
             }
 
             // By default, show a loading spinner.
