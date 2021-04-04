@@ -33,6 +33,10 @@ dependencies:
   cloud_firestore: ^1.0.1
   sliding_up_panel: ^1.0.2
   lipsum: ^1.0.1
+  timeago: ^3.0.2
+  flutter_local_notifications: ^5.0.0
+  flutter_html: ^0.8.2
+  share: ^2.0.1
 
 dependency_overrides:
   bloc: ^7.0.0-nullsafety.3
@@ -52,4 +56,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/image/
+    - assets/images/

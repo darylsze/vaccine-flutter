@@ -1,6 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:share/share.dart';
 import 'package:vaccine_hk/data/entities.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 
 class PostBannerWidget extends StatelessWidget {
   PostBanner item;
@@ -20,6 +25,13 @@ class PostBannerWidget extends StatelessWidget {
         ),
         height: MediaQuery.of(context).size.height * 0.6,
         child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.white38, Colors.black38]
+            )
+          ),
           padding: EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -62,12 +74,17 @@ class PostBannerWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "22 hours ago",
+                    timeago.format(item.createdAt, locale: "zh"),
                     style: TextStyle(color: Colors.grey[200]),
                   ),
-                  Icon(
-                    Icons.ios_share,
-                    color: Colors.grey[200],
+                  InkWell(
+                    onTap: () {
+                      Share.share("我覺得這篇文章很有趣，想邀請你看看！\n\n${item.title}\n${item.link}\n\n\n-----------\n使用「安心打疫苗」，接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk");
+                    },
+                    child: Icon(
+                      Icons.ios_share,
+                      color: Colors.grey[200],
+                    ),
                   ),
                 ],
               ),

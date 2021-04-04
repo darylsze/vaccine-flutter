@@ -10,21 +10,169 @@ part 'entities.g.dart';
 
 enum PostTag { TRENDING }
 
-abstract class IPost {
+class PostDetails {
+  String id;
   String title;
   String imgUrl;
   DateTime createdAt;
-  List<PostTag> tags;
+  List<String> tags;
+  List<String> categories = [];
+  String description;
+  String link;
 
-  IPost(this.title, this.imgUrl, this.createdAt, this.tags);
+  PostDetails({required this.title,
+    required this.imgUrl,
+    required this.createdAt,
+    required this.tags,
+    required this.categories,
+    required this.description,
+    required this.id,
+    required this.link});
+
+  static PostDetails fromJson(Map<String, dynamic> jsonString) {
+    String title = jsonString['title'] as String;
+    print('title: $title');
+    String imgUrl = jsonString['coverImg'] as String;
+    DateTime createdAt = DateTime.parse(jsonString['createdAt'] as String);
+    List<String> tags = jsonString['tags'] == null ? [] : jsonString['tags'] as List<String>;
+    List<String> categories =
+    jsonString['category'] == null ? [] : [jsonString['category'] as String];
+    String link = jsonString['link'] as String;
+    String description = jsonString['description'] as String;
+    String id = jsonString['id'] as String;
+
+    return PostDetails(
+        title: title,
+        imgUrl: imgUrl,
+        createdAt: createdAt,
+        tags: tags,
+        categories: categories,
+        link: link,
+        description: description,
+        id: id);
+  }
+}
+
+class IPost {
+  String id;
+  String title;
+  String imgUrl;
+  DateTime createdAt;
+  List<String> tags;
+  List<String> categories = [];
+  String shortDescription;
+  String link;
+
+  IPost({required this.title,
+    required this.imgUrl,
+    required this.createdAt,
+    required this.tags,
+    required this.categories,
+    required this.shortDescription,
+    required this.id,
+    required this.link});
 }
 
 class PostRow extends IPost {
-  PostRow(String title, String imgUrl, DateTime createdAt, List<PostTag> tags) : super(title, imgUrl, createdAt, tags);
+  String id;
+  String title;
+  String imgUrl;
+  DateTime createdAt;
+  List<String> tags;
+  List<String> categories = [];
+  String shortDescription;
+  String link;
+
+  PostRow({required this.title,
+    required this.imgUrl,
+    required this.createdAt,
+    required this.tags,
+    required this.categories,
+    required this.shortDescription,
+    required this.id,
+    required this.link}) : super(
+      title: title,
+      id: id,
+      imgUrl: imgUrl,
+      createdAt: createdAt,
+      tags: tags,
+      categories: categories,
+      shortDescription: shortDescription,
+      link: link
+  );
+
+  static IPost fromJson(Map<String, dynamic> jsonString) {
+    String title = jsonString['title'] as String;
+    String imgUrl = jsonString['coverImg'] as String;
+    DateTime createdAt = DateTime.parse(jsonString['createdAt'] as String);
+    List<String> tags = jsonString['tags'] == null ? [] : jsonString['tags'] as List<String>;
+    List<String> categories =
+    jsonString['category'] == null ? [] : [jsonString['category'] as String];
+    String link = jsonString['link'] as String;
+    String shortDescription = jsonString['shortDescription'] as String;
+    String id = jsonString['id'] as String;
+
+    return PostRow(
+        title: title,
+        imgUrl: imgUrl,
+        createdAt: createdAt,
+        tags: tags,
+        categories: categories,
+        link: link,
+        shortDescription: shortDescription,
+        id: id);
+  }
 }
 
 class PostBanner extends IPost {
-  PostBanner(String title, String imgUrl, DateTime createdAt, List<PostTag> tags) : super(title, imgUrl, createdAt, tags);
+  String id;
+  String title;
+  String imgUrl;
+  DateTime createdAt;
+  List<String> tags;
+  List<String> categories = [];
+  String shortDescription;
+  String link;
+
+  PostBanner({required this.title,
+    required this.imgUrl,
+    required this.createdAt,
+    required this.tags,
+    required this.categories,
+    required this.shortDescription,
+    required this.id,
+    required this.link}) : super(
+      title: title,
+      id: id,
+      imgUrl: imgUrl,
+      createdAt: createdAt,
+      tags: tags,
+      categories: categories,
+      shortDescription: shortDescription,
+      link: link
+  );
+
+  static IPost fromJson(Map<String, dynamic> jsonString) {
+    String title = jsonString['title'] as String;
+    String imgUrl = jsonString['coverImg'] as String;
+    DateTime createdAt = DateTime.parse(jsonString['createdAt'] as String);
+    List<String> tags = jsonString['tags'] == null ? [] : jsonString['tags'] as List<String>;
+    List<String> categories =
+    jsonString['category'] == null ? [] : [jsonString['category'] as String];
+    String link = jsonString['link'] as String;
+    String shortDescription = jsonString['shortDescription'] as String;
+    String id = jsonString['id'] as String;
+
+    return PostBanner(
+        title: title,
+        imgUrl: imgUrl,
+        createdAt: createdAt,
+        tags: tags,
+        categories: categories,
+        link: link,
+        shortDescription: shortDescription,
+        id: id);
+  }
 }
 
 @JsonSerializable()

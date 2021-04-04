@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vaccine_hk/presentation/articles/article_page.dart';
+import 'package:vaccine_hk/presentation/MessageHandler.dart';
+import 'package:vaccine_hk/presentation/articles/article_list_page.dart';
 import 'package:vaccine_hk/presentation/centerList/page.dart';
 import 'package:vaccine_hk/widgets/index.dart';
 
@@ -21,28 +22,31 @@ class _HomePageState extends State<HomePage> {
 
   // fixme ordering
   final List<Widget> _widgetOptions = <Widget>[
-    ArticlePage(),
+    ArticleListPage(),
     CenterList(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: MyDrawer(),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '首頁',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article),
-            label: '最新消息',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+    return MessageHandler(
+      child: Scaffold(
+        drawer: MyDrawer(),
+        body: _widgetOptions.elementAt(_selectedIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: '首頁',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.article),
+              label: '最新消息',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaccine_hk/presentation/app/state.dart';
@@ -36,6 +37,7 @@ class Application extends StatelessWidget {
                     primaryColor: Colors.black
                     // additional settings go here
                   ),
+                  debugShowCheckedModeBanner: false,
                   initialRoute: '/',
                   navigatorObservers: [
                     HeroController(),

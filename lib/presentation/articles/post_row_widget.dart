@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:vaccine_hk/data/entities.dart';
 
 class PostRowWidget extends StatelessWidget {
@@ -38,8 +40,14 @@ class PostRowWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("22 hours ago"),
-                    Icon(Icons.ios_share),
+                    Text(timeago.format(item.createdAt, locale: 'zh')),
+                    InkWell(
+                        onTap: () {
+                          Share.share(
+                            "我覺得這篇文章很有趣，想邀請你看看！\n\n${item.title}\n${item.link}\n\n\n-----------\n使用「安心打疫苗」，接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk",
+                          );
+                        },
+                        child: Icon(Icons.ios_share)),
                   ],
                 ),
               ),

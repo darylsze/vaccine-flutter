@@ -1,7 +1,7 @@
 import 'package:vaccine_hk/data/entities.dart';
 import 'package:vaccine_hk/data/remote/index.dart';
 import 'package:vaccine_hk/extensions.dart';
-import 'package:vaccine_hk/presentation/centerList/remote_vaccines_entity.dart';
+import 'package:vaccine_hk/data/remote/remote_vaccines_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'repo.g.dart';

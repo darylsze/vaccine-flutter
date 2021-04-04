@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vaccine_hk/extensions.dart';
 import 'package:vaccine_hk/data/remote/index.dart';
-import 'package:vaccine_hk/presentation/centerList/remote_vaccines_entity.dart';
+import 'package:vaccine_hk/data/remote/remote_vaccines_entity.dart';
 
 // class CenterDetailsQuotaModel {
 //   late DateTime date;
