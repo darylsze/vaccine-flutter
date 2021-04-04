@@ -1,15 +1,18 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:vaccine_hk/AdmobManager.dart';
 import 'package:vaccine_hk/data/entities.dart';
 import 'package:vaccine_hk/presentation/articleDetails/article_details_page.dart';
 import 'package:vaccine_hk/presentation/articles/post_banner_widget.dart';
 import 'package:vaccine_hk/presentation/articles/post_row_widget.dart';
+import 'package:vaccine_hk/stringRes.dart';
 import 'package:vaccine_hk/viewModel/index.dart';
 
 class ArticleListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: AdmobManager().getBanner(AdUnits.ARTICLES_LIST_BOTTOM_BANNER),
       body: FutureBuilder(
           future: ArticlesPageViewModel.getArticles(),
           builder: (context, snapshot) {

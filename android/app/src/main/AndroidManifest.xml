@@ -10,6 +10,9 @@
         android:label="安心打疫苗"
         android:icon="@mipmap/ic_launcher">
         <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_launcher" />
+        <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7706062993499691~9465280495"/>
         <service

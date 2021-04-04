@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:vaccine_hk/AdmobManager.dart';
 import 'package:vaccine_hk/data/entities.dart';
 import 'package:vaccine_hk/data/remote/remote_article_list.dart';
 import 'package:share/share.dart';
+import 'package:vaccine_hk/stringRes.dart';
 
 class ArticleDetailsPageArguments {
   final String postId;
@@ -30,6 +32,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
     String postId = args.postId;
 
     return Scaffold(
+      bottomNavigationBar: AdmobManager().getBanner(AdUnits.ARTICLE_DETAILS_BOTTOM_BANNER),
       body: FutureBuilder(
         future: RemoteArticles.getArticleDetails(postId: postId),
         builder: (context, snapshot) {
