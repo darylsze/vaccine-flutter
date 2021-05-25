@@ -29,8 +29,13 @@ For BLoC pattern, cubit is easy and did quite well, however I would pick RiverPo
 ## Null-safety
 Null-safety is good for Dart 2.12 or later, but current not all libraries support and some library are essentials, for example, Firebase from Google. To make the project easy to integrate different libraries, I have explicity turn off the null-safety by unsound it (https://dart.dev/null-safety/unsound-null-safety). 
 
+# Improvements
+1. Commit message need to follow Semantic Versioning strictly in order to make auto release work to pump version itself.
+2. Refactor project to use RiverPods
+3. Abstract functions that returning widget to a standalone stateless component (as discussed [here](https://ithelp.ithome.com.tw/articles/10237959) and [here](https://github.com/flutter/flutter/issues/19269) that function widget produce different widget tree hierarchy)  
+
 # Summary
-It is my first time to write a complete producting ready app with different Flutter famous libraries and recommended frameworks. During the development, I think Google aims high that provides so many UI libraries into Flutter, definitely make developers life easier than doing native. For parallex effects, go for SliverXXX, for simple informative structure, go for ListView, Column or Row. Such decorative way to develop UI provides unprecedented joyful to me. Doing Flutter is way faster  than React and native.
+It is my first time to write a complete production ready app with different Flutter famous libraries and recommended frameworks. During the development, I think Google aims high that provides so many UI libraries into Flutter, definitely make developers life easier than doing native. For parallex effects, go for SliverXXX, for simple informative structure, go for ListView, Column or Row. Such decorative way to develop UI provides unprecedented joyful to me. Doing Flutter is way faster  than React and native.
 
 However, Dart lang seems is a big burden for this powerful framework because of its language limitation. As Kotlin, JavaScript, Swift has been a very good role model for us in these years, Dart lang seems to be verbose in syntax and very limit features, for example, ~~null-safety~~ (added in 2.12), immutability (need to add library for code generation), json serializable (need code generation again). It's a big concern for perfectionist.
 
