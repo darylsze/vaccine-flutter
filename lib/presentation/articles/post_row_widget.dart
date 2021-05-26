@@ -44,7 +44,7 @@ class PostRowWidget extends StatelessWidget {
                     InkWell(
                         onTap: () {
                           Share.share(
-                            "我覺得這篇文章很有趣，想邀請你看看！\n\n${item.title}\n${item.link}\n\n\n-----------\n使用「安心打疫苗」，接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk",
+                            "我覺得這篇文章很有趣，想邀請你看看！\n\n${item.title}\n${item.link}\n\n\n-----------\n接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk",
                           );
                         },
                         child: Icon(Icons.ios_share)),

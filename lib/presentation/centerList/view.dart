@@ -72,7 +72,7 @@ class CenterListView extends StatelessWidget {
                                 );
                               }),
                         ],
-                        title: Text("安心打疫苗"),
+                        title: Text("疫苗資訊平台"),
                         flexibleSpace: FlexibleSpaceBar(
                           background: MapView(),
                         )),

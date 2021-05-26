@@ -125,7 +125,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                               size: 15,
                             ),
                             onPressed: () {
-                              Share.share("我覺得這篇文章很有趣，想邀請你看看！\n\n${post.title}\n${post.link}\n\n\n-----------\n使用「安心打疫苗」，接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk");
+                              Share.share("我覺得這篇文章很有趣，想邀請你看看！\n\n${post.title}\n${post.link}\n\n\n-----------\n接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk");
                             },
                           ),
                           backgroundColor: Color.fromARGB(255, 238, 238, 238),
@@ -136,7 +136,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                             icon: Image.asset("assets/images/wechat.png", width: 45, height: 45),
                             onPressed: () {
                               // todo go to wechat
-                              Share.share("我覺得這篇文章很有趣，想邀請你看看！\n\n${post.title}\n${post.link}\n\n\n-----------\n使用「安心打疫苗」，接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk");
+                              Share.share("我覺得這篇文章很有趣，想邀請你看看！\n\n${post.title}\n${post.link}\n\n\n-----------\n接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk");
                             },
                           ),
                           backgroundColor: Color.fromARGB(255, 238, 238, 238),
@@ -147,7 +147,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                             icon: Image.asset("assets/images/whatsapp.png", width: 45, height: 45),
                             onPressed: () {
                               // todo go to whatsapp
-                              Share.share("我覺得這篇文章很有趣，想邀請你看看！\n\n${post.title}\n${post.link}\n\n\n-----------\n使用「安心打疫苗」，接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk");
+                              Share.share("我覺得這篇文章很有趣，想邀請你看看！\n\n${post.title}\n${post.link}\n\n\n-----------\n接收最新疫苗資訊！\n\nhttps://play.google.com/store/apps/details?id=com.rejoy.vaccine_hk");
                             },
                           ),
                           backgroundColor: Color.fromARGB(255, 238, 238, 238),
